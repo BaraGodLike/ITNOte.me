@@ -1,0 +1,112 @@
+﻿<Window x:Class="ITNotionWPF.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ITNotionWPF"
+        mc:Ignorable="d"
+        FontFamily="./Fonts/#Advent Pro"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="ITNotion" Height="1080" Width="1920">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PasswordBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Left Block -->
+            <Grid Background="#0D0032" Grid.Column="0">
+                <Viewbox MaxWidth="600" MinWidth="200">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="40">
+                        <TextBlock Text="ITNOte.me" FontWeight="Bold" FontSize="128" Foreground="White"/>
+                        <TextBlock Text="made with pain" FontSize="64" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="by BaraGodLike" FontSize="64" Foreground="White" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Viewbox>
+            </Grid>
+            
+            <!-- Right Block -->
+            <Grid Grid.Column="1" Background="#FFF6EB">
+                <Viewbox MinHeight="390">
+                <Border Background="White" MaxHeight="780" MinHeight="390" 
+                        CornerRadius="30 30 30 30" Padding="40 40 40 40" Margin="150">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
+                    </Border.Effect>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Login Into Your Account" FontWeight="SemiBold"
+                                   FontSize="48" Foreground="Black" Margin="0,0,0,20"/>
+                        
+                        <!-- NicknameBox -->
+                        <TextBlock Text="Nickname" FontSize="32"/>
+                        <TextBox x:Name="NicknameBox" materialDesign:HintAssist.Hint="Enter Nickname" 
+                                 materialDesign:HintAssist.Foreground="#0D0032" 
+                                 materialDesign:TextFieldAssist.UnderlineBrush="#0D0032"
+                                 materialDesign:TextFieldAssist.TextFieldCornerRadius="10"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 Padding="10 5 5 5"
+                                 Margin="0 20 0 10"
+                                 FontSize="20"
+                                 Height="60"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        
+                        <!-- PasswordBox -->
+                        <TextBlock Text="Password" FontSize="32" Margin="0 20 0 10"/>
+                        <PasswordBox x:Name="PasswordBox" materialDesign:HintAssist.Hint="Enter Password" 
+                                 
+                                 materialDesign:HintAssist.Foreground="#0D0032" 
+                                 materialDesign:TextFieldAssist.UnderlineBrush="#0D0032"
+                                 materialDesign:TextFieldAssist.TextFieldCornerRadius="10"
+                                 materialDesign:HintAssist.HelperTextFontSize="20"
+                                 Padding="10 5 5 5"
+                                 Margin="0 10 0 10"
+                                 FontSize="20"
+                                 Height="60"
+                                 Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"/>
+                        
+                        <!-- LoginButton -->
+                        <Button Content="Login" Click="LoginUser" IsDefault="True"
+                                Width="260" Height="75"
+                                materialDesign:ButtonAssist.CornerRadius="40"
+                                Background="#1A96A3"
+                                BorderBrush="#1A96A3"
+                                Foreground="White"
+                                FontSize="32"
+                                FontWeight="ExtraBold"
+                                Margin="70 70 70 0"
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
+                        
+                        
+                        <TextBlock Text="New To ITNOte.me?" FontSize="32" FontWeight="SemiBold" Margin="0 20 0 20"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        
+                        <!-- RegisterButton -->
+                        <Button Content="Register"
+                                Width="260" Height="75"
+                                materialDesign:ButtonAssist.CornerRadius="40"
+                                Background="#0D0032"
+                                BorderBrush="#0D0032"
+                                Foreground="White"
+                                FontSize="32"
+                                FontWeight="ExtraBold"
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
+
+                    </StackPanel>
+                </Border>
+                </Viewbox>
+            </Grid>
+        </Grid>
+    
+</Window>
