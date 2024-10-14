@@ -1,12 +1,13 @@
 ﻿// using ITNotion.Notes;
 
-using ITNotionWPF.User;
 using Microsoft.VisualBasic;
 
-namespace ITNotionWPF.Storage;
+namespace ITNotionWPF.Model.Storage;
 
 public class Storage(IStorage repo) : IStorage
 {
+    public static readonly Storage RepoStorage = new Storage(new LocalRepository());
+    
     public static string HashPassword(string password)
     {
         return Conversion.Hex(password.Select((t, i) => 
@@ -18,19 +19,14 @@ public class Storage(IStorage repo) : IStorage
         return repo.HasNicknameInStorage(name);
     }
 
-    public async Task SaveRegistryUser(UserDto user)
+    public async Task SaveRegistryUser<T>(T user)
     {
         await repo.SaveRegistryUser(user);
     }
 
-    public async Task<UserDto?> GetUserFromStorage(string name)
+    public async Task<T?> GetUserFromStorage<T>(string name)
     {
-        return await repo.GetUserFromStorage(name);
-    }
-
-    public async Task<string?> GetPasswordUser(string name)
-    {
-        return (await GetUserFromStorage(name))?.User?.Password;
+        return await repo.GetUserFromStorage<T>(name);
     }
 
     // public async Task CreateNewSource(AbstractSource source)

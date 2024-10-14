@@ -12,6 +12,8 @@
       <PackageReference Include="MahApps.Metro" Version="3.0.0-alpha0492" />
       <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci776" />
       <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci776" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0-rc.2.24473.5" />
+      <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0-rc.2.24473.5" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +24,22 @@
       <Resource Include="Fonts\AdventPro-Regular.ttf">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Resource>
+	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="View\LoginPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="View\RegisterPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
     </ItemGroup>
 
 </Project>

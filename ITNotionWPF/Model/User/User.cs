@@ -1,9 +1,5 @@
-﻿// using ITNotion.Commands;
-// using ITNotion.Notes;
-
-using ITNotionWPF.Storage;
-
-namespace ITNotionWPF.User;
+﻿
+namespace ITNotionWPF.Model.User;
 
 public class User(string name, string? password)
 {
@@ -11,7 +7,6 @@ public class User(string name, string? password)
     public string? Password { get; } = password;
     // public CommandHistory CommandHistory { get; } = new();
     // public DirectoryNotes Sources { get; } = new("Notes", null);
-    private static readonly Storage.Storage Storage = new(new LocalRepository());
 
     // public async Task AddSource(AbstractSource source)
     // {
@@ -19,4 +14,9 @@ public class User(string name, string? password)
     //     var t2 = Storage.CreateNewSource(source);
     //     await Task.WhenAll(t1, t2);
     // }
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }

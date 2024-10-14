@@ -1,14 +1,12 @@
 ﻿// using ITNotion.Notes;
 
-using ITNotionWPF.User;
-
-namespace ITNotionWPF.Storage;
+namespace ITNotionWPF.Model.Storage;
 
 public interface IStorage
 {
-    Task SaveRegistryUser(UserDto user);
+    Task SaveRegistryUser<T>(T user);
     bool HasNicknameInStorage(string name);
-    Task<UserDto?> GetUserFromStorage(string name);
+    Task<T?> GetUserFromStorage<T>(string name);
     // Task CreateNewSource(AbstractSource source);
 
 }

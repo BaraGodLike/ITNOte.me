@@ -1,33 +1,34 @@
-﻿using System.IO;
+﻿// using ITNotion.Notes;
+using System.IO;
 using System.Text.Json;
-using ITNotionWPF.User;
-// using ITNotion.Notes;
+using static ITNotionWPF.Settings;
 
-namespace ITNotionWPF.Storage;
+namespace ITNotionWPF.Model.Storage;
 
 public class LocalRepository : IStorage
 {
-    public async Task SaveRegistryUser(UserDto user)
+    
+    public async Task SaveRegistryUser<T>(T user)
     {
-        if (!Directory.Exists("Storage/Users/"))
+        if (!Directory.Exists(AppSettings.KeyUserPath))
         {
-            Directory.CreateDirectory("Storage/Users");
+            Directory.CreateDirectory(AppSettings.KeyUserPath);
         }
         
-        await using var createStream = File.Create($"Storage/Users/{user.User!.Name}.json");
+        await using var createStream = File.Create($"{AppSettings.KeyUserPath}{user}.json");
         await JsonSerializer.SerializeAsync(createStream, user);
     }
     
     
     public bool HasNicknameInStorage(string name)
     {
-        return File.Exists($"Storage/Users/{name}.json");
+        return File.Exists($"{AppSettings.KeyUserPath}{name}.json");
     }
 
-    public async Task<UserDto?> GetUserFromStorage(string name)
+    public async Task<T?> GetUserFromStorage<T>(string name)
     {
-        await using var openStream = File.OpenRead($"Storage/Users/{name}.json");
-        return await JsonSerializer.DeserializeAsync<UserDto>(openStream);
+        await using var openStream = File.OpenRead($"{AppSettings.KeyUserPath}{name}.json");
+        return await JsonSerializer.DeserializeAsync<T>(openStream);
     }
 
     // public async Task CreateNewSource(AbstractSource source)
