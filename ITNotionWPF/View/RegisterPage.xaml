@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:ITNotionWPF"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
-      FontFamily="./Fonts/#Advent Pro"
+      FontFamily="pack://application:,,,/ITNotionWPF;component/Fonts/#Advent Pro"
       Title="Register">
     
     <Page.Resources>
