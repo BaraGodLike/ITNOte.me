@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using ITNotionWPF.ModelView;
+using ITNOte.me.ModelView;
 
-namespace ITNotionWPF.View;
+namespace ITNOte.me.View;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml

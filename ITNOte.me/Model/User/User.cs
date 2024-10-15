@@ -1,5 +1,5 @@
 ﻿
-namespace ITNotionWPF.Model.User;
+namespace ITNOte.me.Model.User;
 
 public class User(string name, string? password)
 {

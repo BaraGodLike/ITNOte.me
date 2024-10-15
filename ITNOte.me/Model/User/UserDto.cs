@@ -1,4 +1,4 @@
-﻿namespace ITNotionWPF.Model.User;
+﻿namespace ITNOte.me.Model.User;
 
 public record UserDto(User User)
 {

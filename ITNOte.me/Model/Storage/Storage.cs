@@ -2,11 +2,11 @@
 
 using Microsoft.VisualBasic;
 
-namespace ITNotionWPF.Model.Storage;
+namespace ITNOte.me.Model.Storage;
 
 public class Storage(IStorage repo) : IStorage
 {
-    public static readonly Storage RepoStorage = new Storage(new LocalRepository());
+    public static readonly Storage RepoStorage = new(new LocalRepository());
     
     public static string HashPassword(string password)
     {
@@ -29,8 +29,13 @@ public class Storage(IStorage repo) : IStorage
         return await repo.GetUserFromStorage<T>(name);
     }
 
-    // public async Task CreateNewSource(AbstractSource source)
-    // {
-    //     await repo.CreateNewSource(source);
-    // }
+    public async Task CreateNewSource(string path, string name)
+    {
+        await repo.CreateNewSource(path, name);
+    }
+
+    public async Task WriteInNote(string path, string name, string text)
+    {
+        await repo.WriteInNote(path, name, text);
+    }
 }

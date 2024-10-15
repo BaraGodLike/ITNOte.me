@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace ITNotionWPF;
+namespace ITNOte.me;
 
 public partial class MainWindow : Window
 {

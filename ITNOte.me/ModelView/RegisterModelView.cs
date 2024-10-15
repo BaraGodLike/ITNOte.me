@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
-using ITNotionWPF.Model;
-using ITNotionWPF.Model.Storage;
-using ITNotionWPF.Model.User;
+using ITNOte.me.Model;
+using ITNOte.me.Model.Storage;
+using ITNOte.me.Model.User;
 
-namespace ITNotionWPF.ModelView;
+namespace ITNOte.me.ModelView;
 
 public partial class RegisterModelView : INotifyPropertyChanged
 {
@@ -116,12 +116,12 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;

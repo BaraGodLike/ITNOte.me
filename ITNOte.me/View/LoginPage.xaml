@@ -1,11 +1,11 @@
-﻿<Page x:Class="ITNotionWPF.View.LoginPage"
+﻿<Page x:Class="ITNOte.me.View.LoginPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ITNotionWPF"
+        xmlns:local="clr-namespace:ITNOte.me"
         mc:Ignorable="d"
-        FontFamily="pack://application:,,,/ITNotionWPF;component/Fonts/#Advent Pro"
+        FontFamily="pack://application:,,,/ITNOte.me;component/Fonts/#Advent Pro"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Login">
     

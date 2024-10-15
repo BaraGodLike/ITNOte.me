@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ITNotionWPF.ModelView;
+namespace ITNOte.me.ModelView;
 
 public class DelayCommand : ICommand
 {

@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace ITNotionWPF;
+namespace ITNOte.me;
 
 /// <summary>
 /// Interaction logic for App.xaml

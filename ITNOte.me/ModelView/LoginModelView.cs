@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using ITNotionWPF.Model;
-using ITNotionWPF.Model.Storage;
-using ITNotionWPF.Model.User;
+using ITNOte.me.Model;
+using ITNOte.me.Model.Storage;
+using ITNOte.me.Model.User;
 
-namespace ITNotionWPF.ModelView;
+namespace ITNOte.me.ModelView;
 
 public class LoginModelView : INotifyPropertyChanged
 {

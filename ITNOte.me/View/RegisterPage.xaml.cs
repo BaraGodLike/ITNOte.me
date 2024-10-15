@@ -1,12 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using ITNotionWPF.Model;
-using ITNotionWPF.Model.Storage;
-using ITNotionWPF.Model.User;
-using ITNotionWPF.ModelView;
+using ITNOte.me.ModelView;
+using ITNOte.me.Model;
+using ITNOte.me.Model.Storage;
+using ITNOte.me.Model.User;
 
-namespace ITNotionWPF.View;
+namespace ITNOte.me.View;
 
 public partial class RegisterPage : Page
 {
