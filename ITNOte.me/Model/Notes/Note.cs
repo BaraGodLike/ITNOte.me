@@ -5,7 +5,7 @@ namespace ITNOte.me.Model.Notes;
 public class Note(string name, Folder? parent = null) : AbstractSource(name, parent)
 {
     private List<string> Backup { get; } = new(100);
-    private int _curBackupIndex = 0;
+    private int _curBackupIndex;
 
     public async Task MakeBackup()
     {
@@ -21,9 +21,10 @@ public class Note(string name, Folder? parent = null) : AbstractSource(name, par
     public void CleanBackup()
     {
         Backup.Clear();
+        _curBackupIndex = 0;
     }
 
-    public bool nowInLastBackup()
+    public bool NowInLastBackup()
     {
         return _curBackupIndex == Backup.Count;
     }

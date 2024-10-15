@@ -1,12 +1,19 @@
 ﻿namespace ITNOte.me.Model.Notes;
 
-public class AbstractSource(string name, Folder? parent = null) : IComparable<AbstractSource>
+public class AbstractSource : IComparable<AbstractSource>
 {
-    public string Name { get; private set; } = name;
-    protected Folder? Parent { get; set; } = parent;
-    protected string Path { get; set; } = $"{parent?.Path}/{parent?.Name}";
-    
+    public string Name { get; private set; }
+    protected Folder? Parent { get; set; }
+    protected string Path { get; set; }
 
+    protected AbstractSource(string name, Folder? parent = null)
+    {
+        Name = name;
+        Parent = parent;
+        Path = $"{parent?.Path}/{parent?.Name}";
+        parent?.Children.Add(this);
+    }
+    
     public int CompareTo(AbstractSource? other)
     {
         return string.Compare(Path, other?.Path, StringComparison.Ordinal);
