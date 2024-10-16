@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:ITNOte.me"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="ITNOte.me" Height="1080" Width="1920">
+        Title="ITNOte.me" Height="1080" Width="1920" >
         
-                <Frame Name="MainFrame" />
+                <Frame Name="MainFrame" NavigationUIVisibility="Hidden"/>
         
 </Window>

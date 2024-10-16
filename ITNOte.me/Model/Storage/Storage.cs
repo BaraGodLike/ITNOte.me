@@ -19,9 +19,9 @@ public class Storage(IStorage repo) : IStorage
         return repo.HasNicknameInStorage(name);
     }
 
-    public async Task SaveRegistryUser<T>(T user)
+    public async Task SaveUser<T>(T user)
     {
-        await repo.SaveRegistryUser(user);
+        await repo.SaveUser(user);
     }
 
     public async Task<T?> GetUserFromStorage<T>(string name)
@@ -29,13 +29,19 @@ public class Storage(IStorage repo) : IStorage
         return await repo.GetUserFromStorage<T>(name);
     }
 
-    public async Task CreateNewSource(string path, string name)
+    public async Task CreateNewSource(string path, string name, bool isFile)
     {
-        await repo.CreateNewSource(path, name);
+        await repo.CreateNewSource(path, name, isFile);
     }
 
     public async Task WriteInNote(string path, string name, string text)
     {
         await repo.WriteInNote(path, name, text);
     }
+
+    public async Task<string> ReadNote(string path, string name)
+    {
+        return await repo.ReadNote(path, name);
+    }
+    
 }

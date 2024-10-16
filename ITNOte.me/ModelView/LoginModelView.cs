@@ -4,6 +4,7 @@ using System.Windows;
 using ITNOte.me.Model;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
+using ITNOte.me.View;
 
 namespace ITNOte.me.ModelView;
 
@@ -56,7 +57,7 @@ public class LoginModelView : INotifyPropertyChanged
         Password = "";
     }
     
-    private DelayCommand _goReg;
+    private DelayCommand? _goReg;
     public DelayCommand GoToRegister
     {
         get
@@ -64,14 +65,13 @@ public class LoginModelView : INotifyPropertyChanged
             return _goReg ??= new DelayCommand(async obj =>
                 {
                     ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
-                        .MainFrame
-                        .NavigationService.Navigate(new Uri("View/RegisterPage.xaml", UriKind.Relative));
+                        .MainFrame.Navigate(new Uri("View/RegisterPage.xaml", UriKind.Relative));
                 }
             );
         }
     }
 
-    private DelayCommand _login;
+    private DelayCommand? _login;
     public DelayCommand LoginUser
     {
         get
@@ -89,8 +89,15 @@ public class LoginModelView : INotifyPropertyChanged
                         return;
                     }
 
-                    MessageBox.Show($"Добро пожаловать, {Nickname}!");
-                    await Log.LogInformation(new UserDto(new User(Nickname, Password)), "login");
+                    var user = await Storage.RepoStorage.GetUserFromStorage<UserDto>(Nickname);
+                    var redactor = new RedactorPage
+                    {
+                        DataContext = new RedactorModelView(user!.User)
+                    };
+
+                    ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
+                        .MainFrame.Navigate(redactor);
+                    await Log.LogInformation(user, "login");
                 }
             );
         }

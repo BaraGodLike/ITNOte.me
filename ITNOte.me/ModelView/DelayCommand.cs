@@ -26,6 +26,6 @@ public class DelayCommand : ICommand
 
     public async void Execute(object? parameter)
     {
-        await _execute(parameter); // корректное выполнение асинхронного кода
+        await _execute(parameter); 
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ITNOte.me"
         mc:Ignorable="d"
-        FontFamily="pack://application:,,,/ITNOte.me;component/Fonts/#Advent Pro"
+        FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Login">
     
@@ -61,6 +61,7 @@
                                  materialDesign:TextFieldAssist.UnderlineBrush="#0D0032"
                                  materialDesign:TextFieldAssist.TextFieldCornerRadius="10"
                                  materialDesign:HintAssist.HelperTextFontSize="20"
+                                 MaxLength="20"
                                  Padding="10 5 5 5"
                                  Margin="0 10 0 10"
                                  FontSize="20"

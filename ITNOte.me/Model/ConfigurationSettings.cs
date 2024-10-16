@@ -14,4 +14,5 @@ public sealed class ConfigurationSettings
     
     public required string KeyLog { get; init; }
     public required string KeyUserPath { get; init; }
+    public required string KeyUserSourcesPath { get; init; }
 }

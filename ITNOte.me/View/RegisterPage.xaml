@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:ITNOte.me"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
-      FontFamily="pack://application:,,,/ITNOte.me;component/Fonts/#Advent Pro"
+      FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro"
       Title="Register">
     
     <Page.Resources>
@@ -71,6 +71,7 @@
                     <TextBlock Text="Again Password" FontSize="32"/>
                     <TextBox x:Name="RepeatPasswordBox" materialDesign:HintAssist.Hint="Repeat Password" 
                          Text="{Binding PasswordRepeat, UpdateSourceTrigger=PropertyChanged}"
+                         MaxLength="20"
                          materialDesign:HintAssist.Foreground="#0D0032" 
                          materialDesign:TextFieldAssist.UnderlineBrush="#0D0032"
                          materialDesign:TextFieldAssist.TextFieldCornerRadius="10"

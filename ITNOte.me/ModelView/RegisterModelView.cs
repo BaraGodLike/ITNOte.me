@@ -5,6 +5,7 @@ using System.Windows;
 using ITNOte.me.Model;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
+using ITNOte.me.View;
 
 namespace ITNOte.me.ModelView;
 
@@ -56,7 +57,7 @@ public partial class RegisterModelView : INotifyPropertyChanged
     }
     
 
-    private DelayCommand _register;
+    private DelayCommand? _register;
     public DelayCommand RegisterUser
     {
         get
@@ -80,10 +81,16 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
                     if (PasswordRepeat.Equals(Password))
                     {
-                        var userDto = new User(Nickname, Storage.HashPassword(Password));
-                        await Storage.RepoStorage.SaveRegistryUser(userDto);
-                        MessageBox.Show($"Welcome {Nickname}!");
-                        await Log.LogInformation(userDto, "login");
+                        var userDto = new UserDto(new User(Nickname, Storage.HashPassword(Password)));
+                        var redactor = new RedactorPage
+                        {
+                            DataContext = new RedactorModelView(userDto.User)
+                        };
+
+                        ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
+                            .MainFrame.Navigate(redactor);
+                        await Storage.RepoStorage.SaveUser(userDto);
+                        await Log.LogInformation(userDto, "register");
                         return;
                     }
 
@@ -104,7 +111,7 @@ public partial class RegisterModelView : INotifyPropertyChanged
             return _toLogin ??= new DelayCommand(async obj =>
                 {
                     ((MainWindow) Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!).
-                        MainFrame.NavigationService.Navigate(new Uri("View/LoginPage.xaml", UriKind.Relative));
+                        MainFrame.Navigate(new Uri("View/LoginPage.xaml", UriKind.Relative));
                 }
             );
         }
