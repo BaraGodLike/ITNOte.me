@@ -79,12 +79,12 @@
                       BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Margin="10">
                     <MenuItem Header="New source...">
                         <MenuItem Header="New Folder" FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                  BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Command="{Binding NewFolder}">
+                                  BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Command="{Binding Path=DataContext.NewFolder, RelativeSource={RelativeSource AncestorType=Page}}">
                             <TextBox Text="{Binding NameOfNewSource, UpdateSourceTrigger=PropertyChanged}" 
                                      Width="100" Background="#1a1a1a" Foreground="White"/>
                         </MenuItem>
                         <MenuItem Header="New Note" FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                  BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Command="{Binding NewNote}">
+                                  BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Command="{Binding Path=DataContext.NewNote, RelativeSource={RelativeSource AncestorType=Page}}">
                             <TextBox Text="{Binding NameOfNewSource, UpdateSourceTrigger=PropertyChanged}" 
                                      Width="100" Background="#1a1a1a" Foreground="White"/>
                         </MenuItem>

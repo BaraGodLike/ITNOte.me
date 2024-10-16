@@ -84,6 +84,7 @@ public class RedactorModelView : INotifyPropertyChanged
     {
         get
         {
+            Console.Write("Hello World");
             return _newFolder ??= new DelayCommand(async obj =>
             {
                 if (NameOfNewSource.Equals("") || NameOfNewSource.Contains(' '))
@@ -104,6 +105,7 @@ public class RedactorModelView : INotifyPropertyChanged
     {
         get
         {
+            Console.Write(_newNote is null);
             return _newNote ??= new DelayCommand(async obj =>
             {
                 if (NameOfNewSource.Equals("") || NameOfNewSource.Contains(' '))
