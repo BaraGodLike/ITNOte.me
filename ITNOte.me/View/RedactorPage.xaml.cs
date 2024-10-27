@@ -11,13 +11,4 @@ public partial class RedactorPage : Page
     {
         InitializeComponent();
     }
-    
-    private async void TreeViewItem_Selected(object sender, RoutedPropertyChangedEventArgs<object> e)
-    {
-        if (e.NewValue is AbstractSource selectedSource)
-        {
-            await ((RedactorModelView)DataContext).LoadNoteContent(selectedSource);
-        }
-    }
-
 }

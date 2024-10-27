@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using static ITNOte.me.Model.ConfigurationSettings;
 
 namespace ITNOte.me.Model.Storage;
@@ -13,9 +14,15 @@ public class LocalRepository : IStorage
         {
             Directory.CreateDirectory(AppConfigurationSettings.KeyUserPath);
         }
+        var options = new JsonSerializerOptions
+        {
+            Converters = { new AbstractSourceConverter() },
+            WriteIndented = true,
+            MaxDepth = 256
+        };
         
         await using var createStream = File.Create($"{AppConfigurationSettings.KeyUserPath}{user}.json");
-        await JsonSerializer.SerializeAsync(createStream, user);
+        await JsonSerializer.SerializeAsync(createStream, user, options);
     }
     
     
@@ -26,8 +33,15 @@ public class LocalRepository : IStorage
 
     public async Task<T?> GetUserFromStorage<T>(string name)
     {
+        var options = new JsonSerializerOptions
+        {
+            
+            Converters = { new AbstractSourceConverter() },
+            WriteIndented = true,
+            MaxDepth = 256
+        };
         await using var openStream = File.OpenRead($"{AppConfigurationSettings.KeyUserPath}{name}.json");
-        return await JsonSerializer.DeserializeAsync<T>(openStream);
+        return await JsonSerializer.DeserializeAsync<T>(openStream, options);
     }
 
     public async Task CreateNewSource(string path, string name, bool isFile)
@@ -56,6 +70,6 @@ public class LocalRepository : IStorage
 
     public async Task<string> ReadNote(string path, string name)
     {
-        return await File.ReadAllTextAsync($"{path}/{name}");
+        return await File.ReadAllTextAsync($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}.txt");
     }
 }

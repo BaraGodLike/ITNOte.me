@@ -61,40 +61,46 @@
                 </Border>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                               Background="#1A1A1A" BorderBrush="#1a1a1a" Padding="20">
-                    <TreeView ItemsSource="{Binding Folders}" 
-                              SelectedItemChanged="TreeViewItem_Selected" Background="#1A1A1A" BorderBrush="#1a1a1a">
+                    <TreeView Name="FolderTree" ItemsSource="{Binding Folders}" Background="#1A1A1A" BorderBrush="#1a1a1a">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                <TextBlock Text="{Binding Name}" />
-                                <HierarchicalDataTemplate.ItemTemplate>
-                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                        <TextBlock Text="{Binding Name}" />
-                                    </HierarchicalDataTemplate>
-                                </HierarchicalDataTemplate.ItemTemplate>
+                                    <Button Name="ButtonSource" Content="{Binding Name}" Style="{StaticResource MaterialDesignFlatButton}"
+                                            Foreground="White"  
+                                            Command="{Binding DataContext.ExecuteSourceButton, RelativeSource={RelativeSource AncestorType=Page}}"
+                                            CommandParameter="{Binding ElementName=FolderTree, Path=SelectedItem}"
+                                    />
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
                 </ScrollViewer>
                 <Menu FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
                       BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Margin="10">
-                    <MenuItem Header="New source...">
-                        <MenuItem Header="New Folder" FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                  BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Command="{Binding Path=DataContext.NewFolder, RelativeSource={RelativeSource AncestorType=Page}}">
-                            <TextBox Text="{Binding NameOfNewSource, UpdateSourceTrigger=PropertyChanged}" 
-                                     Width="100" Background="#1a1a1a" Foreground="White"/>
-                        </MenuItem>
-                        <MenuItem Header="New Note" FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                  BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Command="{Binding Path=DataContext.NewNote, RelativeSource={RelativeSource AncestorType=Page}}">
-                            <TextBox Text="{Binding NameOfNewSource, UpdateSourceTrigger=PropertyChanged}" 
-                                     Width="100" Background="#1a1a1a" Foreground="White"/>
-                        </MenuItem>
+                    <MenuItem Header="New source..." Background="#1a1a1a">
+                        <MenuItem Header="New Folder" 
+                                  FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
+                                  BorderBrush="#1a1a1a" 
+                                  Background="#1a1a1a" 
+                                  Foreground="White" 
+                                  Command="{Binding NewFolder}" 
+                                  CommandParameter="{Binding Text, ElementName=FolderNameTextBox}"/>
+                        <MenuItem Header="New Note" 
+                                  FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
+                                  BorderBrush="#1a1a1a" 
+                                  Background="#1a1a1a" 
+                                  Foreground="White" 
+                                  Command="{Binding NewNote}" 
+                                  CommandParameter="{Binding Text, ElementName=NoteNameTextBox}"/>
+                        <TextBox x:Name="NoteNameTextBox"
+                                 Background="#1a1a1a" 
+                                 Foreground="White"
+                                 Text="{Binding NameOfNewSource, UpdateSourceTrigger=PropertyChanged}"/>
                     </MenuItem>
                 </Menu>
             </StackPanel>
             
             <!-- Редактор -->
             <Border Padding="10" Grid.Column="1" Grid.Row="1">
-                <TextBox Text="{Binding CurrentNote, Mode=TwoWay}" 
+                <TextBox Text="{Binding ContentNote, Mode=TwoWay}" 
                          BorderBrush="#0E0E0E"
                          AcceptsReturn="True" 
                          VerticalScrollBarVisibility="Auto" 

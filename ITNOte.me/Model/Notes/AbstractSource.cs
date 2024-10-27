@@ -1,21 +1,39 @@
-﻿namespace ITNOte.me.Model.Notes;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
-public class AbstractSource : IComparable<AbstractSource>
+namespace ITNOte.me.Model.Notes
 {
-    public string Name { get; private set; }
-    protected Folder? Parent { get; set; }
-    protected string Path { get; set; }
+    [Serializable]
+    public abstract class AbstractSource : IComparable<AbstractSource>
+    {
+        public string Name { get; set; }
+        [JsonIgnore]
+        public Folder? Parent { get; set; }
+        public string Path { get; set; }
+        
+        public ObservableCollection<AbstractSource>? Children { get; set; }
+        public string Type { get; set; }
 
-    protected AbstractSource(string name, Folder? parent = null)
-    {
-        Name = name;
-        Parent = parent;
-        Path = $"{parent?.Path}/{parent?.Name}";
-        parent?.Children.Add(this);
-    }
-    
-    public int CompareTo(AbstractSource? other)
-    {
-        return string.Compare(Path, other?.Path, StringComparison.Ordinal);
+        protected AbstractSource(string name, Folder? parent = null)
+        {
+            Name = name;
+            Parent = parent;
+            Path = $"{parent?.Path}/{parent?.Name}";
+            if (parent != null && !parent.Children!.Contains(this))
+                parent.Children.Add(this);
+        }
+
+        [JsonConstructor]
+        protected AbstractSource()
+        {
+            
+        }
+        
+        public int CompareTo(AbstractSource? other)
+        {
+            return string.Compare(Path, other?.Path, StringComparison.Ordinal);
+        }
     }
 }

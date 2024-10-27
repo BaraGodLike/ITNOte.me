@@ -1,51 +1,62 @@
 ﻿using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace ITNOte.me.Model.Notes;
 
+[Serializable]
 public class Note : AbstractSource
 {
+    public string Content = "";
     private List<string> Backup { get; } = new(100);
     private int _curBackupIndex;
 
     public Note(string name, Folder? parent = null) : base(name, parent)
     {
+        Type = nameof(Note);
         _ = Storage.Storage.RepoStorage.CreateNewSource(Path, Name, true);
     }
+
+    [JsonConstructor]
+    public Note() : base()
+    {
+        
+    }
+    
     
     public async Task MakeBackup()
     {
-        var now = await GetText();
-        if (!now.Equals(Backup[_curBackupIndex]))
+        if (!Content.Equals(Backup[_curBackupIndex]))
         {
             if (Backup.Count == 100) Backup.RemoveAt(0);
-            Backup.Add(now);
-            _curBackupIndex = Backup.Count;
+            Backup.Add(Content);
+            _curBackupIndex = Backup.Count - 1;
         }
     }
 
     public void CleanBackup()
     {
         Backup.Clear();
-        _curBackupIndex = 0;
+        _curBackupIndex = -1;
     }
 
     public bool NowInLastBackup()
     {
-        return _curBackupIndex == Backup.Count;
+        return _curBackupIndex + 1 == Backup.Count;
     }
 
     public void NewBranchBackup()
     {
         Backup.RemoveRange(_curBackupIndex, Backup.Count - 1);
     }
-
-    public async Task FromBackup()
-    {
-        await Storage.Storage.RepoStorage.WriteInNote(Path, Name, Backup[_curBackupIndex]);
-    }
-
-    public async Task<string> GetText()
+    
+    public async Task<string> GetTextFromFile()
     {
         return await Storage.Storage.RepoStorage.ReadNote(Path, Name);
+    }
+
+    public async Task Save()
+    {
+        await Storage.Storage.RepoStorage.WriteInNote(Path, Name, Content);
     }
 }

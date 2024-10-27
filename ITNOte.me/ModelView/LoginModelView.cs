@@ -42,7 +42,7 @@ public class LoginModelView : INotifyPropertyChanged
     {
         return Password != null && 
                Storage.HashPassword(Password).
-                   Equals((await Storage.RepoStorage.GetUserFromStorage<UserDto>(Nickname))!.User.Password);
+                   Equals((await Storage.RepoStorage.GetUserFromStorage<User>(Nickname))!.Password);
     }
 
     private void IncorrectNickname()
@@ -89,10 +89,10 @@ public class LoginModelView : INotifyPropertyChanged
                         return;
                     }
 
-                    var user = await Storage.RepoStorage.GetUserFromStorage<UserDto>(Nickname);
+                    var user = await Storage.RepoStorage.GetUserFromStorage<User>(Nickname);
                     var redactor = new RedactorPage
                     {
-                        DataContext = new RedactorModelView(user!.User)
+                        DataContext = new RedactorModelView(user!)
                     };
 
                     ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)

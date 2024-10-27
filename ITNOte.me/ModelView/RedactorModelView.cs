@@ -12,25 +12,55 @@ namespace ITNOte.me.ModelView;
 public class RedactorModelView : INotifyPropertyChanged
 {
     private User User { get; }
-    public ObservableCollection<AbstractSource> Folders { get; }
-    
-    private string _currentNote;
-    public string CurrentNote
+    private ObservableCollection<AbstractSource> _folders;
+
+    public ObservableCollection<AbstractSource> Folders
     {
-        get => _currentNote;
-        set => SetField(ref _currentNote, value);
+        get => _folders;
+        set
+        {
+            _folders = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    private string _contentNote;
+    public string ContentNote
+    {
+        get => _contentNote;
+        set
+        {
+            _contentNote = value;
+            OnPropertyChanged();
+        }
     }
 
+    private Note? _curNote;
+
+    public Note CurNote
+    {
+        get => _curNote;
+        set
+        {
+            _curNote = value;
+            OnPropertyChanged();
+        }
+    }
+    
     public string LogOutUsername => $"logout from {User.Name}";
 
     private bool _isNoteSelected;
     public bool IsNoteSelected
     {
         get => _isNoteSelected;
-        set => SetField(ref _isNoteSelected, value);
+        set
+        {
+            _isNoteSelected = value;
+            OnPropertyChanged();
+        }
     }
 
-    private string _nameOfNewSource = string.Empty;
+    private string _nameOfNewSource = "Test";
 
     public string NameOfNewSource
     {
@@ -45,8 +75,8 @@ public class RedactorModelView : INotifyPropertyChanged
     public RedactorModelView(User user)
     {
         User = user;
-        Folders = user.GeneralFolder.Children;
-        CurrentNote = string.Empty;
+        _folders = user.GeneralFolder.Children;
+        ContentNote = string.Empty;
         IsNoteSelected = true;
     }
     
@@ -54,13 +84,13 @@ public class RedactorModelView : INotifyPropertyChanged
     {
         if (selectedFile is Note note)
         {
-            CurrentNote = await note.GetText();
-            IsNoteSelected = true;
+            ContentNote = await note.GetTextFromFile();
+            IsNoteSelected = false;
         }
         else
         {
-            CurrentNote = string.Empty;
-            IsNoteSelected = false;
+            ContentNote = string.Empty;
+            IsNoteSelected = true;
         }
     }
     
@@ -84,7 +114,6 @@ public class RedactorModelView : INotifyPropertyChanged
     {
         get
         {
-            Console.Write("Hello World");
             return _newFolder ??= new DelayCommand(async obj =>
             {
                 if (NameOfNewSource.Equals("") || NameOfNewSource.Contains(' '))
@@ -92,8 +121,8 @@ public class RedactorModelView : INotifyPropertyChanged
                     MessageBox.Show("Source can't be null or named with SPACE");
                     return;
                 }
-                Console.Write("Создал папку");
-                Folders.Add(new Folder(NameOfNewSource, User.GeneralFolder));
+                new Folder(NameOfNewSource, User.GeneralFolder);
+                await Storage.RepoStorage.SaveUser(User);
                 NameOfNewSource = string.Empty;
             });
         }
@@ -105,7 +134,6 @@ public class RedactorModelView : INotifyPropertyChanged
     {
         get
         {
-            Console.Write(_newNote is null);
             return _newNote ??= new DelayCommand(async obj =>
             {
                 if (NameOfNewSource.Equals("") || NameOfNewSource.Contains(' '))
@@ -113,15 +141,36 @@ public class RedactorModelView : INotifyPropertyChanged
                     MessageBox.Show("Source can't be null or named with SPACE");
                     return;
                 }
-                Console.Write("Создал файл");
                 var note = new Note(NameOfNewSource, User.GeneralFolder);
-                Folders.Add(note);
                 await LoadNoteContent(note);
+                await Storage.RepoStorage.SaveUser(User);
                 NameOfNewSource = string.Empty;
             });
         }
     }
 
+    private DelayCommand? _executeSourceButton;
+
+    public DelayCommand ExecuteSourceButton
+    {
+        get
+        {
+            return _executeSourceButton ??= new DelayCommand(async obj =>
+            {
+                if (obj is Note note)
+                {
+                    await CurNote.Save();
+                    CurNote = note;
+                    await LoadNoteContent(note);
+                    return;
+                }
+
+                var folder = obj as Folder;
+                
+            });
+        }
+    }
+    
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

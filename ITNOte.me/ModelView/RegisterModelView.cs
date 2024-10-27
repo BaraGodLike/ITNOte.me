@@ -81,16 +81,16 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
                     if (PasswordRepeat.Equals(Password))
                     {
-                        var userDto = new UserDto(new User(Nickname, Storage.HashPassword(Password)));
+                        var user = new User(Nickname, Storage.HashPassword(Password));
                         var redactor = new RedactorPage
                         {
-                            DataContext = new RedactorModelView(userDto.User)
+                            DataContext = new RedactorModelView(user)
                         };
 
                         ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
                             .MainFrame.Navigate(redactor);
-                        await Storage.RepoStorage.SaveUser(userDto);
-                        await Log.LogInformation(userDto, "register");
+                        await Storage.RepoStorage.SaveUser(user);
+                        await Log.LogInformation(user, "register");
                         return;
                     }
 
@@ -103,7 +103,7 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
     
     
-    private DelayCommand _toLogin;
+    private DelayCommand? _toLogin;
     public DelayCommand BackToLogin
     {
         get
