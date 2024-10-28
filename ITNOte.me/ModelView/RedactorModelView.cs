@@ -133,9 +133,13 @@ public partial class RedactorModelView : INotifyPropertyChanged
             });
         }
     }
+
+    private bool IsValidNameOfSource()
+    {
+        return User.GeneralFolder.Children!.All(i => !i.Name.Equals(NameOfNewSource));
+    }
     
     private DelayCommand? _newNote;
-
     public DelayCommand NewNote
     {
         get
@@ -152,6 +156,13 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 if (!NameRegex().IsMatch(NameOfNewSource))
                 {
                     MessageBox.Show("Name can contains only latin letters, numbers and underscore");
+                    return;
+                }
+
+                if (!IsValidNameOfSource())
+                {
+                    MessageBox.Show("The name is occupied");
+                    NameOfNewSource = string.Empty;
                     return;
                 }
                 
