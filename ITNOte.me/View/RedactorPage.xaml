@@ -17,6 +17,10 @@
         </ResourceDictionary>
     </Page.Resources>
     
+    <Page.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveNoteCommand}" />
+    </Page.InputBindings>
+    
     <Grid Background="#0E0E0E">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -61,14 +65,14 @@
                 </Border>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                               Background="#1A1A1A" BorderBrush="#1a1a1a" Padding="20">
-                    <TreeView Name="FolderTree" ItemsSource="{Binding Folders}" Background="#1A1A1A" BorderBrush="#1a1a1a">
+                    <TreeView Name="FolderTree" ItemsSource="{Binding Folders}" SelectedItemChanged="TreeViewItem_Selected"
+                              Background="#1A1A1A" BorderBrush="#1a1a1a">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                    <Button Name="ButtonSource" Content="{Binding Name}" Style="{StaticResource MaterialDesignFlatButton}"
-                                            Foreground="White"  
-                                            Command="{Binding DataContext.ExecuteSourceButton, RelativeSource={RelativeSource AncestorType=Page}}"
-                                            CommandParameter="{Binding ElementName=FolderTree, Path=SelectedItem}"
-                                    />
+                                
+                                <TextBlock Name="ButtonSource" Text="{Binding Name}"
+                                        Foreground="White"  
+                                />
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
@@ -100,7 +104,7 @@
             
             <!-- Редактор -->
             <Border Padding="10" Grid.Column="1" Grid.Row="1">
-                <TextBox Text="{Binding ContentNote, Mode=TwoWay}" 
+                <TextBox Text="{Binding ContentNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          BorderBrush="#0E0E0E"
                          AcceptsReturn="True" 
                          VerticalScrollBarVisibility="Auto" 

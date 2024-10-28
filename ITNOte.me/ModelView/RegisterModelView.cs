@@ -81,7 +81,7 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
                     if (PasswordRepeat.Equals(Password))
                     {
-                        var user = new User(Nickname, Storage.HashPassword(Password));
+                        var user = new User(Nickname, Storage.Hasher.HashPassword(Password));
                         var redactor = new RedactorPage
                         {
                             DataContext = new RedactorModelView(user)

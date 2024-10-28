@@ -1,10 +1,7 @@
-﻿using ITNOte.me.Model.Notes;
-
-namespace ITNOte.me.Model.Storage;
-using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using ITNOte.me.Model.Notes;
+
+namespace ITNOte.me.Model.Notes;
 
 public class AbstractSourceConverter : JsonConverter<AbstractSource>
 {

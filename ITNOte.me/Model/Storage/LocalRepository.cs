@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ITNOte.me.Model.Notes;
 using static ITNOte.me.Model.ConfigurationSettings;
 
 namespace ITNOte.me.Model.Storage;
@@ -35,7 +36,6 @@ public class LocalRepository : IStorage
     {
         var options = new JsonSerializerOptions
         {
-            
             Converters = { new AbstractSourceConverter() },
             WriteIndented = true,
             MaxDepth = 256

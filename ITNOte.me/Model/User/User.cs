@@ -7,10 +7,10 @@ namespace ITNOte.me.Model.User;
 public class User
 {
     public string Name { get; init; }
-    public string? Password { get; init; }
+    public byte[]? Password { get; init; }
     public Folder GeneralFolder { get; init; }
     
-    public User(string name, string? password, Folder generalFolder)
+    public User(string name, byte[]? password, Folder generalFolder)
     {
         Name = name;
         Password = password;
@@ -23,7 +23,7 @@ public class User
         
     }
     
-    public User(string name, string? password) : this(name, password, new Folder(name))
+    public User(string name, byte[]? password) : this(name, password, new Folder(name))
     {
     }
     public override string ToString() => Name;

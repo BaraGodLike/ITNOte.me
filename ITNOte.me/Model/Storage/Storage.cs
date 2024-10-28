@@ -1,5 +1,6 @@
 ﻿// using ITNotion.Notes;
 
+using System.Security.Cryptography;
 using Microsoft.VisualBasic;
 
 namespace ITNOte.me.Model.Storage;
@@ -7,13 +8,8 @@ namespace ITNOte.me.Model.Storage;
 public class Storage(IStorage repo) : IStorage
 {
     public static readonly Storage RepoStorage = new(new LocalRepository());
+    public static readonly PasswordHasher Hasher = new PasswordHasher();
     
-    public static string HashPassword(string password)
-    {
-        return Conversion.Hex(password.Select((t, i) => 
-            t * (long) Math.Pow(7, i)).Sum());
-    }
-
     public bool HasNicknameInStorage(string name)
     {
         return repo.HasNicknameInStorage(name);

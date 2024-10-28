@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using ITNOte.me.Model;
 using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
@@ -23,7 +24,7 @@ public class RedactorModelView : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
+
     private string _contentNote;
     public string ContentNote
     {
@@ -37,7 +38,7 @@ public class RedactorModelView : INotifyPropertyChanged
 
     private Note? _curNote;
 
-    public Note CurNote
+    public Note? CurNote
     {
         get => _curNote;
         set
@@ -75,21 +76,23 @@ public class RedactorModelView : INotifyPropertyChanged
     public RedactorModelView(User user)
     {
         User = user;
-        _folders = user.GeneralFolder.Children;
+        _folders = user.GeneralFolder.Children!;
         ContentNote = string.Empty;
         IsNoteSelected = true;
     }
     
     public async Task LoadNoteContent(AbstractSource selectedFile)
     {
+        if (CurNote != null)
+            await CurNote.Save();
         if (selectedFile is Note note)
         {
+            CurNote = note;
             ContentNote = await note.GetTextFromFile();
             IsNoteSelected = false;
         }
         else
         {
-            ContentNote = string.Empty;
             IsNoteSelected = true;
         }
     }
@@ -101,6 +104,7 @@ public class RedactorModelView : INotifyPropertyChanged
         {
             return _toLogin ??= new DelayCommand(async obj =>
                 {
+                    await Log.LogInformation(User, "log out");
                     ((MainWindow) Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!).
                         MainFrame.NavigationService.Navigate(new Uri("View/LoginPage.xaml", UriKind.Relative));
                 }
@@ -123,6 +127,7 @@ public class RedactorModelView : INotifyPropertyChanged
                 }
                 new Folder(NameOfNewSource, User.GeneralFolder);
                 await Storage.RepoStorage.SaveUser(User);
+                await Log.LogInformation(User, $"created new Folder with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
             });
         }
@@ -144,29 +149,26 @@ public class RedactorModelView : INotifyPropertyChanged
                 var note = new Note(NameOfNewSource, User.GeneralFolder);
                 await LoadNoteContent(note);
                 await Storage.RepoStorage.SaveUser(User);
+                await Log.LogInformation(User, $"created new Note with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
             });
         }
     }
+    
+    private DelayCommand? _saveNoteCommand;
 
-    private DelayCommand? _executeSourceButton;
-
-    public DelayCommand ExecuteSourceButton
+    public DelayCommand SaveNoteCommand
     {
         get
         {
-            return _executeSourceButton ??= new DelayCommand(async obj =>
+            return _saveNoteCommand ??= new DelayCommand(async obj =>
             {
-                if (obj is Note note)
+                if (CurNote != null)
                 {
+                    CurNote.Content = ContentNote;
                     await CurNote.Save();
-                    CurNote = note;
-                    await LoadNoteContent(note);
-                    return;
+                    await Log.LogInformation(User, $"saved file {CurNote}");
                 }
-
-                var folder = obj as Folder;
-                
             });
         }
     }

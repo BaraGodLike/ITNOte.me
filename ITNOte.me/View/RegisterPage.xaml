@@ -28,7 +28,7 @@
         
         
         <!-- Right Block -->
-        <Grid Grid.Column="1" Background="#FFF6EB">
+        <Grid Grid.Column="1" Background="#1A1A1A">
             <Viewbox>
             <Border Background="White" MaxHeight="780" MinHeight="390" 
                     CornerRadius="30 30 30 30" Padding="40 40 40 0" Margin="150">
