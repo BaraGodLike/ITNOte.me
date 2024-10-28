@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using ITNOte.me.Model;
 using ITNOte.me.Model.Notes;
@@ -10,7 +11,7 @@ using ITNOte.me.Model.User;
 
 namespace ITNOte.me.ModelView;
 
-public class RedactorModelView : INotifyPropertyChanged
+public partial class RedactorModelView : INotifyPropertyChanged
 {
     private User User { get; }
     private ObservableCollection<AbstractSource> _folders;
@@ -141,11 +142,19 @@ public class RedactorModelView : INotifyPropertyChanged
         {
             return _newNote ??= new DelayCommand(async obj =>
             {
-                if (NameOfNewSource.Equals("") || NameOfNewSource.Contains(' '))
+                if (AbstractSource.BannedNames.Contains(NameOfNewSource))
                 {
-                    MessageBox.Show("Source can't be null or named with SPACE");
+                    MessageBox.Show("Unacceptable name");
+                    NameOfNewSource = string.Empty;
                     return;
                 }
+
+                if (!NameRegex().IsMatch(NameOfNewSource))
+                {
+                    MessageBox.Show("Name can contains only latin letters, numbers and underscore");
+                    return;
+                }
+                
                 var note = new Note(NameOfNewSource, User.GeneralFolder);
                 await LoadNoteContent(note);
                 await Storage.RepoStorage.SaveUser(User);
@@ -167,7 +176,7 @@ public class RedactorModelView : INotifyPropertyChanged
                 {
                     CurNote.Content = ContentNote;
                     await CurNote.Save();
-                    await Log.LogInformation(User, $"saved file {CurNote}");
+                    await Log.LogInformation(User, $"saved file {CurNote.Name}");
                 }
             });
         }
@@ -187,4 +196,9 @@ public class RedactorModelView : INotifyPropertyChanged
         OnPropertyChanged(propertyName);
         return true;
     }
+    
+    
+    [GeneratedRegex(@"^[a-zA-Z0-9_]+$")]
+    private static partial Regex NameRegex();
+    
 }

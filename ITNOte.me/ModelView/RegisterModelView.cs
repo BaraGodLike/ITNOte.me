@@ -47,13 +47,13 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
     private bool IsCorrectName()
     {
-        if (Nickname == null || Nickname.Length < 2) return false;
+        if (Nickname == null || Nickname.Length < 2 || !NicknameRegex().IsMatch(Nickname)) return false;
         return !Storage.RepoStorage.HasNicknameInStorage(Nickname);
     }
 
     private bool IsCorrectPassword()
     {
-        return Password != null && MyRegex().IsMatch(Password) && Password.Length >= 4;
+        return Password != null && PasswordRegex().IsMatch(Password) && Password.Length >= 4;
     }
     
 
@@ -119,7 +119,10 @@ public partial class RegisterModelView : INotifyPropertyChanged
     
 
     [GeneratedRegex(@"^[a-zA-Z0-9_]+$")]
-    private static partial Regex MyRegex();
+    private static partial Regex PasswordRegex();
+
+    [GeneratedRegex(@"^[a-zA-Z0-9_]+$")]
+    private static partial Regex NicknameRegex();
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
