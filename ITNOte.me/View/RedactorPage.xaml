@@ -4,11 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:ITNOte.me.View"
+      xmlns:me="clr-namespace:ITNOte.me"
+      xmlns:converters="clr-namespace:ITNOte.me.Model.Converters"
       mc:Ignorable="d"
       Title="Redactor">
     
     <Page.Resources>
         <ResourceDictionary>
+            <converters:BooleanConverter x:Key="BooleanConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PasswordBox.xaml" />
@@ -69,10 +72,27 @@
                               Background="#1A1A1A" BorderBrush="#1a1a1a">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                
-                                <TextBlock Name="ButtonSource" Text="{Binding Name}"
-                                        Foreground="White"  
-                                />
+                                <TextBlock Name="ButtonSource" Text="{Binding Name}" Foreground="White">
+                                    <TextBlock.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="New Note" 
+                                                      Command="{Binding DataContext.CreateNewResourceCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
+                                                      CommandParameter="{Binding}" 
+                                                      FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
+                                                      BorderBrush="#1a1a1a" 
+                                                      Background="#1a1a1a" 
+                                                      Foreground="White" />
+                                            <TextBox Background="#1a1a1a" 
+                                                     Foreground="White"
+                                                     MinWidth="60"
+                                                     FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
+                                                     BorderBrush="#1a1a1a" 
+                                                     Text="{Binding NameOfNewSource, 
+                                                     RelativeSource={RelativeSource AncestorType=Page},
+                                                     UpdateSourceTrigger=PropertyChanged}"/>
+                                        </ContextMenu>
+                                    </TextBlock.ContextMenu>
+                                </TextBlock>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
@@ -85,18 +105,17 @@
                                   BorderBrush="#1a1a1a" 
                                   Background="#1a1a1a" 
                                   Foreground="White" 
-                                  Command="{Binding NewFolder}" 
-                                  CommandParameter="{Binding Text, ElementName=FolderNameTextBox}"/>
+                                  Command="{Binding NewFolder}"/>
                         <MenuItem Header="New Note" 
                                   FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
                                   BorderBrush="#1a1a1a" 
                                   Background="#1a1a1a" 
                                   Foreground="White" 
-                                  Command="{Binding NewNote}" 
-                                  CommandParameter="{Binding Text, ElementName=NoteNameTextBox}"/>
+                                  Command="{Binding NewNote}"/>
                         <TextBox x:Name="NoteNameTextBox"
                                  Background="#1a1a1a" 
                                  Foreground="White"
+                                 MinWidth="60"
                                  Text="{Binding NameOfNewSource, UpdateSourceTrigger=PropertyChanged}"/>
                     </MenuItem>
                 </Menu>

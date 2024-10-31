@@ -10,6 +10,7 @@ namespace ITNOte.me.ModelView;
 
 public class LoginModelView : INotifyPropertyChanged
 {
+    public IStorage _storage { get; init; } = Model.Storage.Storage.RepoStorage;
     private string? _nickname = "";
     private string? _password = "";
 
@@ -35,14 +36,14 @@ public class LoginModelView : INotifyPropertyChanged
 
     private bool IsValidNickname()
     {
-        return Nickname != null && Storage.RepoStorage.HasNicknameInStorage(Nickname);
+        return Nickname != null && _storage.HasNicknameInStorage(Nickname);
     }
 
     private async Task<bool> IsValidPassword()
     {
         return Password != null &&
                Storage.Hasher.VerifyHashedPassword(Password,
-                   (await Storage.RepoStorage.GetUserFromStorage<User>(Nickname!))!.Password);
+                   (await _storage.GetUserFromStorage<User>(Nickname!))!.Password);
     }
 
     private void IncorrectNickname()
@@ -89,7 +90,7 @@ public class LoginModelView : INotifyPropertyChanged
                         return;
                     }
 
-                    var user = await Storage.RepoStorage.GetUserFromStorage<User>(Nickname!);
+                    var user = await _storage.GetUserFromStorage<User>(Nickname!);
                     var redactor = new RedactorPage
                     {
                         DataContext = new RedactorModelView(user!)

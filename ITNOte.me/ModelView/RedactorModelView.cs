@@ -13,6 +13,7 @@ namespace ITNOte.me.ModelView;
 
 public partial class RedactorModelView : INotifyPropertyChanged
 {
+    public IStorage _storage { get; init; } = Storage.RepoStorage; 
     private User User { get; }
     private ObservableCollection<AbstractSource> _folders;
 
@@ -84,8 +85,8 @@ public partial class RedactorModelView : INotifyPropertyChanged
     
     public async Task LoadNoteContent(AbstractSource selectedFile)
     {
-        if (CurNote != null)
-            await CurNote.Save();
+        // if (CurNote != null)
+        //     await CurNote.Save();
         if (selectedFile is Note note)
         {
             CurNote = note;
@@ -121,13 +122,28 @@ public partial class RedactorModelView : INotifyPropertyChanged
         {
             return _newFolder ??= new DelayCommand(async obj =>
             {
-                if (NameOfNewSource.Equals("") || NameOfNewSource.Contains(' '))
+                if (AbstractSource.BannedNames.Contains(NameOfNewSource))
                 {
-                    MessageBox.Show("Source can't be null or named with SPACE");
+                    MessageBox.Show("Unacceptable name");
+                    NameOfNewSource = string.Empty;
                     return;
                 }
+
+                if (!NameRegex().IsMatch(NameOfNewSource))
+                {
+                    MessageBox.Show("Name can contains only latin letters, numbers and underscore");
+                    return;
+                }
+
+                if (!IsValidNameOfSource())
+                {
+                    MessageBox.Show("The name is occupied");
+                    NameOfNewSource = string.Empty;
+                    return;
+                }
+
                 new Folder(NameOfNewSource, User.GeneralFolder);
-                await Storage.RepoStorage.SaveUser(User);
+                await _storage.SaveUser(User);
                 await Log.LogInformation(User, $"created new Folder with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
             });
@@ -168,7 +184,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 
                 var note = new Note(NameOfNewSource, User.GeneralFolder);
                 await LoadNoteContent(note);
-                await Storage.RepoStorage.SaveUser(User);
+                await _storage.SaveUser(User);
                 await Log.LogInformation(User, $"created new Note with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
             });
@@ -192,6 +208,33 @@ public partial class RedactorModelView : INotifyPropertyChanged
             });
         }
     }
+    
+    private DelayCommand? _createNewResourceCommand;
+    public DelayCommand CreateNewResourceCommand
+    {
+        get
+        {
+            Console.Write("вне команды");
+            return _createNewResourceCommand ??= new DelayCommand(async obj =>
+            {
+                Console.Write("внутри команды");
+                if (obj is Folder folder && !string.IsNullOrEmpty(NameOfNewSource) && 
+                    !AbstractSource.BannedNames.Contains(NameOfNewSource) && IsValidNameOfSource())
+                {
+                    Console.WriteLine("папка");
+                    var newNote = new Note(NameOfNewSource, folder);
+                    await _storage.SaveUser(User);
+                    NameOfNewSource = string.Empty;
+                }
+                else
+                {
+                    MessageBox.Show("Invalid folder name or contains spaces.");
+                }
+            });
+        }
+    }
+    
+    public bool IsFolder(object obj) => obj is Folder;
     
     public event PropertyChangedEventHandler? PropertyChanged;
 

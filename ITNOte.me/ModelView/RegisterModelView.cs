@@ -11,7 +11,7 @@ namespace ITNOte.me.ModelView;
 
 public partial class RegisterModelView : INotifyPropertyChanged
 {
-    
+    public IStorage _storage { get; init; } = Model.Storage.Storage.RepoStorage;
     private string _nickname = "";
     private string _password = "";
     private string _passwordRepeat = "";
@@ -45,13 +45,13 @@ public partial class RegisterModelView : INotifyPropertyChanged
         }
     }
 
-    private bool IsCorrectName()
+    public bool IsCorrectName()
     {
         if (Nickname == null || Nickname.Length < 2 || !NicknameRegex().IsMatch(Nickname)) return false;
-        return !Storage.RepoStorage.HasNicknameInStorage(Nickname);
+        return !_storage.HasNicknameInStorage(Nickname);
     }
 
-    private bool IsCorrectPassword()
+    public bool IsCorrectPassword()
     {
         return Password != null && PasswordRegex().IsMatch(Password) && Password.Length >= 4;
     }
@@ -89,7 +89,7 @@ public partial class RegisterModelView : INotifyPropertyChanged
 
                         ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
                             .MainFrame.Navigate(redactor);
-                        await Storage.RepoStorage.SaveUser(user);
+                        await _storage.SaveUser(user);
                         await Log.LogInformation(user, "register");
                         return;
                     }
