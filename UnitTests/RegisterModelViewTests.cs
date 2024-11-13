@@ -35,7 +35,7 @@ namespace UnitTests
         public void Nickname_Validation_ShouldFail_IfAlreadyExists()
         {
             _viewModel.Nickname = "existingUser";
-            _repoStorageMock.Setup(x => x.HasNicknameInStorage("existingUser")).Returns(true);
+            _repoStorageMock.Setup(x => x.HasNicknameInStorage("existingUser")).ReturnsAsync(true);
             
             var result = _viewModel.IsCorrectName();
             
@@ -68,7 +68,7 @@ namespace UnitTests
             _viewModel.Nickname = "newUser";
             _viewModel.Password = "password123";
             _viewModel.PasswordRepeat = "password321";
-            _repoStorageMock.Setup(x => x.HasNicknameInStorage(It.IsAny<string>())).Returns(false);
+            _repoStorageMock.Setup(x => x.HasNicknameInStorage(It.IsAny<string>())).ReturnsAsync(false);
             
             _viewModel.RegisterUser.Execute(null);
             

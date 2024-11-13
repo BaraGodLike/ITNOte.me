@@ -34,9 +34,9 @@ public class LoginModelView : INotifyPropertyChanged
     }
 
 
-    private bool IsValidNickname()
+    private async Task<bool> IsValidNickname()
     {
-        return Nickname != null && _storage.HasNicknameInStorage(Nickname);
+        return Nickname != null && await _storage.HasNicknameInStorage(Nickname);
     }
 
     private async Task<bool> IsValidPassword()
@@ -79,7 +79,7 @@ public class LoginModelView : INotifyPropertyChanged
         {
             return _login ??= new DelayCommand(async obj =>
                 {
-                    if (!IsValidNickname())
+                    if (! await IsValidNickname())
                     {
                         IncorrectNickname();
                         return;

@@ -22,7 +22,7 @@ public class AbstractSourceConverter : JsonConverter<AbstractSource>
 
     public override void Write(Utf8JsonWriter writer, AbstractSource value, JsonSerializerOptions options)
     {
-        JsonSerializer.Serialize(writer, value, value.Type.Equals(nameof(Folder)) ? typeof(Folder) : typeof(Note),
+        JsonSerializer.Serialize(writer, value, value.Type!.Equals(nameof(Folder)) ? typeof(Folder) : typeof(Note),
             options);
     }
 }

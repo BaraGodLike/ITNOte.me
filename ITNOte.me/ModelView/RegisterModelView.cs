@@ -9,9 +9,9 @@ using ITNOte.me.View;
 
 namespace ITNOte.me.ModelView;
 
-public partial class RegisterModelView : INotifyPropertyChanged
+public partial class RegisterModelView() : INotifyPropertyChanged
 {
-    public IStorage _storage { get; init; } = Model.Storage.Storage.RepoStorage;
+    public IStorage _storage { get; init; } = Storage.RepoStorage;
     private string _nickname = "";
     private string _password = "";
     private string _passwordRepeat = "";
@@ -45,10 +45,11 @@ public partial class RegisterModelView : INotifyPropertyChanged
         }
     }
 
-    public bool IsCorrectName()
+    public async Task<bool> IsCorrectName()
     {
-        if (Nickname == null || Nickname.Length < 2 || !NicknameRegex().IsMatch(Nickname)) return false;
-        return !_storage.HasNicknameInStorage(Nickname);
+        if (Nickname == null || Nickname.Length < 2 || 
+            !NicknameRegex().IsMatch(Nickname) || BannedNames.bannedNames.Contains(Nickname)) return false;
+        return !await _storage.HasNicknameInStorage(Nickname);
     }
 
     public bool IsCorrectPassword()
@@ -64,7 +65,7 @@ public partial class RegisterModelView : INotifyPropertyChanged
         {
             return _register ??= new DelayCommand(async obj =>
                 {
-                    if (!IsCorrectName())
+                    if (!await IsCorrectName())
                     {
                         MessageBox.Show("The nickname is occupied or null");
                         Nickname = "";

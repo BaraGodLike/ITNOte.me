@@ -27,8 +27,8 @@ public partial class RedactorModelView : INotifyPropertyChanged
         }
     }
 
-    private string _contentNote;
-    public string ContentNote
+    private string? _contentNote;
+    public string? ContentNote
     {
         get => _contentNote;
         set
@@ -85,8 +85,6 @@ public partial class RedactorModelView : INotifyPropertyChanged
     
     public async Task LoadNoteContent(AbstractSource selectedFile)
     {
-        // if (CurNote != null)
-        //     await CurNote.Save();
         if (selectedFile is Note note)
         {
             CurNote = note;
@@ -97,6 +95,13 @@ public partial class RedactorModelView : INotifyPropertyChanged
         {
             IsNoteSelected = true;
         }
+    }
+
+    private async Task NewNoteContent(Note note)
+    {
+        CurNote = note;
+        ContentNote = note.Content;
+        IsNoteSelected = false;
     }
     
     private DelayCommand? _toLogin;
@@ -122,7 +127,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
         {
             return _newFolder ??= new DelayCommand(async obj =>
             {
-                if (AbstractSource.BannedNames.Contains(NameOfNewSource))
+                if (BannedNames.bannedNames.Contains(NameOfNewSource))
                 {
                     MessageBox.Show("Unacceptable name");
                     NameOfNewSource = string.Empty;
@@ -142,7 +147,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
                     return;
                 }
 
-                new Folder(NameOfNewSource, User.GeneralFolder);
+                var folder = new Folder(NameOfNewSource, User.GeneralFolder);
                 await _storage.SaveUser(User);
                 await Log.LogInformation(User, $"created new Folder with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
@@ -162,7 +167,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
         {
             return _newNote ??= new DelayCommand(async obj =>
             {
-                if (AbstractSource.BannedNames.Contains(NameOfNewSource))
+                if (BannedNames.bannedNames.Contains(NameOfNewSource))
                 {
                     MessageBox.Show("Unacceptable name");
                     NameOfNewSource = string.Empty;
@@ -183,7 +188,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 }
                 
                 var note = new Note(NameOfNewSource, User.GeneralFolder);
-                await LoadNoteContent(note);
+                await NewNoteContent(note);
                 await _storage.SaveUser(User);
                 await Log.LogInformation(User, $"created new Note with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
@@ -204,31 +209,6 @@ public partial class RedactorModelView : INotifyPropertyChanged
                     CurNote.Content = ContentNote;
                     await CurNote.Save();
                     await Log.LogInformation(User, $"saved file {CurNote.Name}");
-                }
-            });
-        }
-    }
-    
-    private DelayCommand? _createNewResourceCommand;
-    public DelayCommand CreateNewResourceCommand
-    {
-        get
-        {
-            Console.Write("вне команды");
-            return _createNewResourceCommand ??= new DelayCommand(async obj =>
-            {
-                Console.Write("внутри команды");
-                if (obj is Folder folder && !string.IsNullOrEmpty(NameOfNewSource) && 
-                    !AbstractSource.BannedNames.Contains(NameOfNewSource) && IsValidNameOfSource())
-                {
-                    Console.WriteLine("папка");
-                    var newNote = new Note(NameOfNewSource, folder);
-                    await _storage.SaveUser(User);
-                    NameOfNewSource = string.Empty;
-                }
-                else
-                {
-                    MessageBox.Show("Invalid folder name or contains spaces.");
                 }
             });
         }

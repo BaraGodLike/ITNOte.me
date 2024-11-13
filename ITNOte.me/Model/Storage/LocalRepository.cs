@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using ITNOte.me.Model.Notes;
 using static ITNOte.me.Model.ConfigurationSettings;
 
@@ -27,7 +26,7 @@ public class LocalRepository : IStorage
     }
     
     
-    public bool HasNicknameInStorage(string name)
+    public async Task<bool> HasNicknameInStorage(string name)
     {
         return File.Exists($"{AppConfigurationSettings.KeyUserPath}{name}.json");
     }
@@ -44,31 +43,31 @@ public class LocalRepository : IStorage
         return await JsonSerializer.DeserializeAsync<T>(openStream, options);
     }
 
-    public async Task CreateNewSource(string path, string name, bool isFile)
+    public async Task CreateNewSource(AbstractSource source)
     {
-        if (!Directory.Exists($"{AppConfigurationSettings.KeyUserSourcesPath}{path}"))
+        if (!Directory.Exists($"{AppConfigurationSettings.KeyUserSourcesPath}{source.Path}"))
         {
-            Directory.CreateDirectory($"{AppConfigurationSettings.KeyUserSourcesPath}{path}");
+            Directory.CreateDirectory($"{AppConfigurationSettings.KeyUserSourcesPath}{source.Path}");
         }
     
-        if (isFile)
-        {   if (File.Exists($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}.txt"))
+        if (source.Type == nameof(Note))
+        {   if (File.Exists($"{AppConfigurationSettings.KeyUserSourcesPath}{source.Path}/{source.Name}.txt"))
                 return;
-            await using var createStream = File.Create($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}.txt");
+            await using var createStream = File.Create($"{AppConfigurationSettings.KeyUserSourcesPath}{source.Path}/{source.Name}.txt");
             return;
         }
 
-        if (Directory.Exists($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}"))
+        if (Directory.Exists($"{AppConfigurationSettings.KeyUserSourcesPath}{source.Path}/{source.Name}"))
             return;
-        Directory.CreateDirectory($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}");
+        Directory.CreateDirectory($"{AppConfigurationSettings.KeyUserSourcesPath}{source.Path}/{source.Name}");
     }
-
-    public async Task WriteInNote(string path, string name, string text)
+    
+    public async Task WriteInNote(int id, string name, string text)
     {
-        await File.WriteAllTextAsync($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}.txt", text);
+        await File.WriteAllTextAsync($"{AppConfigurationSettings.KeyUserSourcesPath}{id}/{name}.txt", text);
     }
 
-    public async Task<string> ReadNote(string path, string name)
+    public async Task<string> ReadNote(int path, string name)
     {
         return await File.ReadAllTextAsync($"{AppConfigurationSettings.KeyUserSourcesPath}{path}/{name}.txt");
     }

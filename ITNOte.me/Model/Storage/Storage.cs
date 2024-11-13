@@ -1,19 +1,16 @@
-﻿// using ITNotion.Notes;
-
-using System.Security.Cryptography;
-using Microsoft.VisualBasic;
+﻿using ITNOte.me.Model.Notes;
 
 namespace ITNOte.me.Model.Storage;
 
 public class Storage(IStorage repo) : IStorage
 {
-    public static Storage RepoStorage = new(new LocalRepository());
+    public static Storage RepoStorage = new(new Database());
     public static readonly PasswordHasher Hasher = new PasswordHasher();
     
-
-    public bool HasNicknameInStorage(string name)
+    
+    public async Task<bool> HasNicknameInStorage(string name)
     {
-        return repo.HasNicknameInStorage(name);
+        return await repo.HasNicknameInStorage(name);
     }
 
     public async Task SaveUser<T>(T user)
@@ -26,19 +23,19 @@ public class Storage(IStorage repo) : IStorage
         return await repo.GetUserFromStorage<T>(name);
     }
 
-    public async Task CreateNewSource(string path, string name, bool isFile)
+    public async Task CreateNewSource(AbstractSource source)
     {
-        await repo.CreateNewSource(path, name, isFile);
+        await repo.CreateNewSource(source);
     }
 
-    public async Task WriteInNote(string path, string name, string text)
+    public async Task WriteInNote(int id, string name, string text)
     {
-        await repo.WriteInNote(path, name, text);
+        await repo.WriteInNote(id, name, text);
     }
 
-    public async Task<string> ReadNote(string path, string name)
+    public async Task<string> ReadNote(int id, string name)
     {
-        return await repo.ReadNote(path, name);
+        return await repo.ReadNote(id, name);
     }
     
 }

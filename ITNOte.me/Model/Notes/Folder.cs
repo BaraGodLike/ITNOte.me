@@ -1,8 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
-
-namespace ITNOte.me.Model.Notes;
+﻿namespace ITNOte.me.Model.Notes;
 
 [Serializable]
 public class Folder : AbstractSource
@@ -11,12 +7,7 @@ public class Folder : AbstractSource
     {
         Children = [];
         Type = nameof(Folder);
-        _ = Storage.Storage.RepoStorage.CreateNewSource(Path, Name, false);
     }
-
-    public Folder() : base()
-    {
-        
-    }
+    
 }
 

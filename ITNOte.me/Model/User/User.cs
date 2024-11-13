@@ -1,30 +1,34 @@
-﻿
-using System.Text.Json.Serialization;
-using ITNOte.me.Model.Notes;
+﻿using ITNOte.me.Model.Notes;
+using ITNOte.me.Model.Storage;
 
-namespace ITNOte.me.Model.User;
-
-public class User
+namespace ITNOte.me.Model.User
 {
-    public string Name { get; init; }
-    public byte[]? Password { get; init; }
-    public Folder GeneralFolder { get; init; }
-    
-    public User(string name, byte[]? password, Folder generalFolder)
+    public class User
     {
-        Name = name;
-        Password = password;
-        GeneralFolder = generalFolder;
-    }
+        public string Name { get; init; }
+        public byte[]? Password { get; set; }
+        public Folder GeneralFolder { get; set; }
+        public int General_Folder_Id { get; set; }
 
-    [JsonConstructor]
-    public User()
-    {
+        public User()
+        {
+            
+        }
         
+        public User(string name, byte[]? password, Folder genfolder)
+        {
+            Name = name;
+            Password = password;
+            GeneralFolder = genfolder; 
+        }
+        
+        public User(string name, byte[]? password)
+        {
+            Name = name;
+            Password = password;
+            GeneralFolder = new Folder(name); 
+        }
+
+        public override string ToString() => Name;
     }
-    
-    public User(string name, byte[]? password) : this(name, password, new Folder(name))
-    {
-    }
-    public override string ToString() => Name;
 }

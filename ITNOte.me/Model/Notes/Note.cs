@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
-
+﻿
 namespace ITNOte.me.Model.Notes;
 
 [Serializable]
@@ -14,16 +11,16 @@ public class Note : AbstractSource
     public Note(string name, Folder? parent = null) : base(name, parent)
     {
         Type = nameof(Note);
-        _ = Storage.Storage.RepoStorage.CreateNewSource(Path, Name, true);
+        _ = Storage.Storage.RepoStorage.CreateNewSource(this);
     }
 
-    [JsonConstructor]
     public Note() : base()
     {
         
     }
     
     
+
     public async Task MakeBackup()
     {
         if (!Content.Equals(Backup[_curBackupIndex]))
@@ -52,11 +49,11 @@ public class Note : AbstractSource
     
     public async Task<string> GetTextFromFile()
     {
-        return await Storage.Storage.RepoStorage.ReadNote(Path, Name);
+        return await Storage.Storage.RepoStorage.ReadNote(Id, Name);
     }
 
     public async Task Save()
     {
-        await Storage.Storage.RepoStorage.WriteInNote(Path, Name, Content);
+        await Storage.Storage.RepoStorage.WriteInNote(Id, Name, Content);
     }
 }

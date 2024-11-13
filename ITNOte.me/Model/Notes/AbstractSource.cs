@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Collections.ObjectModel;
 
 namespace ITNOte.me.Model.Notes
 {
     [Serializable]
     public abstract class AbstractSource : IComparable<AbstractSource>
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        [JsonIgnore]
         public Folder? Parent { get; set; }
         public string Path { get; set; }
 
@@ -27,7 +24,6 @@ namespace ITNOte.me.Model.Notes
                 parent.Children.Add(this);
         }
 
-        [JsonConstructor]
         protected AbstractSource()
         {
             

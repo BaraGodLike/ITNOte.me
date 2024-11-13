@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:ITNOte.me"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
+      DataContext="RegisterModelView"
       FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro"
       Title="Register">
     

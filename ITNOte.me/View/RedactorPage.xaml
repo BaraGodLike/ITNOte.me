@@ -72,27 +72,7 @@
                               Background="#1A1A1A" BorderBrush="#1a1a1a">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                <TextBlock Name="ButtonSource" Text="{Binding Name}" Foreground="White">
-                                    <TextBlock.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="New Note" 
-                                                      Command="{Binding DataContext.CreateNewResourceCommand, RelativeSource={RelativeSource AncestorType=Page}}" 
-                                                      CommandParameter="{Binding}" 
-                                                      FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                                      BorderBrush="#1a1a1a" 
-                                                      Background="#1a1a1a" 
-                                                      Foreground="White" />
-                                            <TextBox Background="#1a1a1a" 
-                                                     Foreground="White"
-                                                     MinWidth="60"
-                                                     FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                                     BorderBrush="#1a1a1a" 
-                                                     Text="{Binding NameOfNewSource, 
-                                                     RelativeSource={RelativeSource AncestorType=Page},
-                                                     UpdateSourceTrigger=PropertyChanged}"/>
-                                        </ContextMenu>
-                                    </TextBlock.ContextMenu>
-                                </TextBlock>
+                                <TextBlock Name="ButtonSource" Text="{Binding Name}" Foreground="White"/>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>

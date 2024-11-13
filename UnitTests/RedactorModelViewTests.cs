@@ -72,7 +72,7 @@ namespace UnitTests
 
             _redactorModelView.NewFolder.Execute(null);
 
-            Assert.IsTrue(_testUser.GeneralFolder.Children!.Any(f => f.Name == "NewFolder"));
+            Assert.That(_testUser.GeneralFolder.Children!.Any(f => f.Name == "NewFolder"), Is.True);
             _repoStorageMock.Verify(repo => repo.SaveUser(_testUser), Times.Once);
         }
 
