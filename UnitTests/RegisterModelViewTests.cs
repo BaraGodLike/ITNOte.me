@@ -22,22 +22,22 @@ namespace UnitTests
         }
 
         [Test]
-        public void Nickname_Validation_ShouldFail_IfTooShort()
+        public async Task Nickname_Validation_ShouldFail_IfTooShort()
         {
             _viewModel.Nickname = "a";
             
-            var result = _viewModel.IsCorrectName();
+            var result = await _viewModel.IsCorrectName();
             
             Assert.That(result, Is.False, "Nickname should be at least 2 characters long.");
         }
 
         [Test]
-        public void Nickname_Validation_ShouldFail_IfAlreadyExists()
+        public async Task Nickname_Validation_ShouldFail_IfAlreadyExists()
         {
             _viewModel.Nickname = "existingUser";
             _repoStorageMock.Setup(x => x.HasNicknameInStorage("existingUser")).ReturnsAsync(true);
             
-            var result = _viewModel.IsCorrectName();
+            var result = await _viewModel.IsCorrectName();
             
             Assert.That(result, Is.False, "Nickname should not already exist in storage.");
         }

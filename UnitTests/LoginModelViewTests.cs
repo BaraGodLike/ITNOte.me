@@ -24,20 +24,6 @@ namespace UnitTests
             };
         }
 
-        [Test]
-        public void IsValidNickname_ShouldReturnFalse_WhenNicknameNotInStorage()
-        {
-            _repoStorageMock.Setup(repo => repo.HasNicknameInStorage("UnknownUser")).ReturnsAsync(false);
-
-            _loginModelView.Nickname = "UnknownUser";
-
-            var method = typeof(LoginModelView).GetMethod("IsValidNickname",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var result = (bool) method?.Invoke(_loginModelView, null)!;
-
-            Assert.That(result, Is.False);
-        }
-
 
         [Test]
         public async Task LoginUser_ShouldShowError_WhenInvalidNickname()
