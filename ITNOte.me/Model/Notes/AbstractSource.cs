@@ -9,8 +9,6 @@ namespace ITNOte.me.Model.Notes
         public string Name { get; set; }
         public Folder? Parent { get; set; }
         public string Path { get; set; }
-
-        public static List<string> BannedNames = ["con", "prn", "com1", "com2", "com3", "com4", "lpt1", "lpt2", "lpt3", "lpt4"];
         
         public ObservableCollection<AbstractSource>? Children { get; set; }
         public string Type { get; set; }

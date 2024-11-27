@@ -18,8 +18,6 @@ public class Note : AbstractSource
     {
         
     }
-    
-    
 
     public async Task MakeBackup()
     {
@@ -40,20 +38,5 @@ public class Note : AbstractSource
     public bool NowInLastBackup()
     {
         return _curBackupIndex + 1 == Backup.Count;
-    }
-
-    public void NewBranchBackup()
-    {
-        Backup.RemoveRange(_curBackupIndex, Backup.Count - 1);
-    }
-    
-    public async Task<string> GetTextFromFile()
-    {
-        return await Storage.Storage.RepoStorage.ReadNote(Id, Name);
-    }
-
-    public async Task Save()
-    {
-        await Storage.Storage.RepoStorage.WriteInNote(Id, Name, Content);
     }
 }

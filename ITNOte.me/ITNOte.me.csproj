@@ -11,8 +11,11 @@
     <ItemGroup>
       <PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
       <PackageReference Include="MahApps.Metro" Version="3.0.0-alpha0492" />
+      <PackageReference Include="Markdig" Version="0.38.0" />
+      <PackageReference Include="Markdown" Version="2.2.1" />
       <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci776" />
       <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci776" />
+      <PackageReference Include="MdXaml" Version="1.27.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,6 +26,7 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
+      <PackageReference Include="WpfMath" Version="2.1.0" />
     </ItemGroup>
 
     <ItemGroup>

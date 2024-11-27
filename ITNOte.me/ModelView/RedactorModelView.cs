@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -8,6 +7,8 @@ using ITNOte.me.Model;
 using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
+using MdXaml;
+using WpfMath.Controls;
 
 namespace ITNOte.me.ModelView;
 
@@ -88,7 +89,8 @@ public partial class RedactorModelView : INotifyPropertyChanged
         if (selectedFile is Note note)
         {
             CurNote = note;
-            ContentNote = await note.GetTextFromFile();
+            ContentNote = await _storage.ReadNote(note.Id, note.Name);
+            
             IsNoteSelected = false;
         }
         else
@@ -206,15 +208,17 @@ public partial class RedactorModelView : INotifyPropertyChanged
             {
                 if (CurNote != null)
                 {
-                    CurNote.Content = ContentNote;
-                    await CurNote.Save();
+                    CurNote.Content = ContentNote!;
+                    await _storage.WriteInNote(CurNote.Id, CurNote.Name, CurNote.Content!);
                     await Log.LogInformation(User, $"saved file {CurNote.Name}");
                 }
             });
         }
     }
     
+    
     public bool IsFolder(object obj) => obj is Folder;
+    
     
     public event PropertyChangedEventHandler? PropertyChanged;
 
