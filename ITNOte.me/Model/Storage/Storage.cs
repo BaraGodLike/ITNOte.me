@@ -37,5 +37,14 @@ public class Storage(IStorage repo) : IStorage
     {
         return await repo.ReadNote(id, name);
     }
-    
+
+    public async Task RenameNote(int id, string newName)
+    {
+        await repo.RenameNote(id, newName);
+    }
+
+    public async Task DeleteNote(int id)
+    {
+        await repo.DeleteNote(id);
+    }
 }

@@ -11,7 +11,7 @@ public class Note : AbstractSource
     public Note(string name, Folder? parent = null) : base(name, parent)
     {
         Type = nameof(Note);
-        _ = Storage.Storage.RepoStorage.CreateNewSource(this);
+        // _ = Storage.Storage.RepoStorage.CreateNewSource(this);
     }
 
     public Note() : base()

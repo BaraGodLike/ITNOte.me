@@ -11,5 +11,6 @@ public interface IStorage
     Task CreateNewSource(AbstractSource source);
     Task WriteInNote(int id, string name, string text);
     Task<string> ReadNote(int id, string name);
-    
+    Task RenameNote(int id, string newName);
+    Task DeleteNote(int id);
 }

@@ -34,9 +34,7 @@ public class Database : IStorage
             {
                 UserName = userData.Name
             });
-            const string querySetFolder = $"""
-                                           UPDATE USERS SET GENERAL_FOLDER_ID = @FolderId WHERE NAME = @Name;
-                                           """;
+            const string querySetFolder = $"""UPDATE USERS SET GENERAL_FOLDER_ID = @FolderId WHERE NAME = @Name;""";
             await connection.ExecuteAsync(querySetFolder, new
             {
                 FolderId = folderId,
@@ -50,14 +48,14 @@ public class Database : IStorage
     public async Task<bool> HasNicknameInStorage(string name)
     {
         var connection = await GetConnection();
-        var query = $"""SELECT EXISTS(SELECT 1 FROM USERS WHERE NAME = @KeyValue);""";
+        const string query = $"""SELECT EXISTS(SELECT 1 FROM USERS WHERE NAME = @KeyValue);""";
         return (bool)await connection.ExecuteScalarAsync(query, new { KeyValue = name });
     }
 
     public async Task<T?> GetUserFromStorage<T>(string name)
     {
         var connection = await GetConnection();
-        var query = $"""SELECT NAME, PASSWORD, GENERAL_FOLDER_ID FROM USERS WHERE NAME = @Name""";
+        const string query = $"""SELECT NAME, PASSWORD, GENERAL_FOLDER_ID FROM USERS WHERE NAME = @Name""";
         var result = await connection.QuerySingleOrDefaultAsync<User.User>(query, new { Name = name });
         if (result == null) return default;
         var generalFolder = new Folder(result.Name)
@@ -72,7 +70,7 @@ public class Database : IStorage
     public async Task CreateNewSource(AbstractSource source)
     {
         var connection = await GetConnection();
-        const string query = $"INSERT INTO NOTES (PARENT_ID, NAME, CONTENT) VALUES (@ParentId, @Name, @Content) RETURNING ID";
+        const string query = $"""INSERT INTO NOTES (PARENT_ID, NAME, CONTENT) VALUES (@ParentId, @Name, @Content) RETURNING ID""";
         var idNote = await connection.ExecuteScalarAsync(query, new
         {
             ParentId = source.Parent!.Id,
@@ -97,15 +95,36 @@ public class Database : IStorage
     public async Task<string> ReadNote(int id, string name)
     {
         var connection = await GetConnection();
-        var query = $"""SELECT CONTENT FROM NOTES WHERE ID = @Id""";
+        const string query = $"""SELECT CONTENT FROM NOTES WHERE ID = @Id""";
         var content = await connection.QuerySingleOrDefaultAsync<string>(query, new { Id = id});
         return content ?? string.Empty;
+    }
+
+    public async Task RenameNote(int id, string newName)
+    {
+       var connection = await GetConnection();
+       const string query = $"""UPDATE NOTES SET NAME = @NewName WHERE ID = @Id""";
+       await connection.ExecuteAsync(query, new
+       {
+           NewName = newName,
+           Id = id
+       });
+    }
+
+    public async Task DeleteNote(int id)
+    {
+        var connection = await GetConnection();
+        const string query = $"""DELETE FROM NOTES WHERE ID = @Id""";
+        await connection.ExecuteAsync(query, new
+        {
+            Id = id
+        });
     }
 
     private async Task<ObservableCollection<AbstractSource>> GetAllChildren(int rootId)
     {
         using var connection = await GetConnection();
-        var query = $"""SELECT * FROM NOTES WHERE PARENT_ID = (@RootId)""";
+        const string query = $"""SELECT * FROM NOTES WHERE PARENT_ID = (@RootId)""";
         var notes = await connection.QueryAsync<Note>(query, new { RootId = rootId });
         return new ObservableCollection<AbstractSource>(notes);
     }

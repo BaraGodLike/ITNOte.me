@@ -7,8 +7,7 @@ using ITNOte.me.Model;
 using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
-using MdXaml;
-using WpfMath.Controls;
+
 
 namespace ITNOte.me.ModelView;
 
@@ -217,6 +216,28 @@ public partial class RedactorModelView : INotifyPropertyChanged
     }
     
     
+    private DelayCommand? _deleteNoteCommand;
+    public DelayCommand DeleteNoteCommand
+    {
+        get
+        {
+            return _deleteNoteCommand ??= new DelayCommand(async obj =>
+            {
+                Console.WriteLine($"DeleteNoteCommand called with parameter: {obj}");
+                if (obj is Note note)
+                {
+                    User.GeneralFolder.Children!.Remove(note);
+                    await _storage.DeleteNote(note.Id);
+                    await Log.LogInformation(User, $"Deleted note {note.Name}");
+                }
+                else
+                {
+                    Console.WriteLine("DeleteNoteCommand received an invalid parameter.");
+                }
+            });
+        }
+    }
+
     public bool IsFolder(object obj) => obj is Folder;
     
     

@@ -7,7 +7,7 @@
       xmlns:me="clr-namespace:ITNOte.me"
       xmlns:converters="clr-namespace:ITNOte.me.Model.Converters"
       xmlns:mdXaml="https://github.com/whistyun/MdXaml"
-      xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
       Title="Redactor">
     
@@ -75,7 +75,17 @@
                               Background="#1A1A1A" BorderBrush="#1a1a1a">
                         <TreeView.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                                <TextBlock Name="ButtonSource" Text="{Binding Name}" Foreground="White"/>
+                                <StackPanel DataContext="{Binding}">
+                                    <TextBlock Name="ButtonSource" Text="{Binding Name}" Foreground="White" />
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Delete"
+                                                      Command="{Binding Path=PlacementTarget.DataContext.DeleteNoteCommand, 
+                                                      RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                      CommandParameter="{Binding}" />
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
+                                </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
@@ -83,12 +93,6 @@
                 <Menu FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
                       BorderBrush="#1a1a1a" Background="#1a1a1a" Foreground="White" Margin="10">
                     <MenuItem Header="New source..." Background="#1a1a1a">
-                        <MenuItem Header="New Folder" 
-                                  FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
-                                  BorderBrush="#1a1a1a" 
-                                  Background="#1a1a1a" 
-                                  Foreground="White" 
-                                  Command="{Binding NewFolder}"/>
                         <MenuItem Header="New Note" 
                                   FontFamily="pack://application:,,,/ITNOte.me;component/Resources/Fonts/#Advent Pro" 
                                   BorderBrush="#1a1a1a" 
