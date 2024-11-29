@@ -88,7 +88,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
         if (selectedFile is Note note)
         {
             CurNote = note;
-            var s = (await _apiService.GetAsync<NoteDto>($"notes/{note.Id}?name={note.Name}"));
+            var s = (await _apiService.GetAsync<NoteDto>($"notes/protected/{note.Id}?name={note.Name}"));
             ContentNote = s?.Content;
             
             IsNoteSelected = false;
@@ -208,7 +208,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 if (CurNote != null)
                 {
                     CurNote.Content = ContentNote!;
-                    await _apiService.PutAsync($"Notes/{CurNote.Id}?name={CurNote.Name}&newContent={CurNote.Content}");
+                    await _apiService.PutAsync($"Notes/protected/{CurNote.Id}?name={CurNote.Name}&newContent={CurNote.Content}");
                     await Log.LogInformation(User, $"saved file {CurNote.Name}");
                 }
             });

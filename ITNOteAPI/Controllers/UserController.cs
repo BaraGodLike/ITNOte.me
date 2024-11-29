@@ -28,8 +28,8 @@ public class UsersController(IStorage storage) : ControllerBase
         var user = await storage.GetUserFromStorage<User>(userDto.Name);
         if (user == null || !Storage.Hasher.VerifyHashedPassword(userDto.Password, user.Password))
             return Unauthorized("Invalid credentials.");
-
-        return Ok(new { Message = "Login successful.", User = user });
+        var token = TokenService.GenerateToken(userDto.Name, "User");
+        return Ok(new { token });
     }
 
     [HttpGet("{name}")]

@@ -1,5 +1,6 @@
 ﻿using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITNOteAPI.Controllers;
@@ -8,14 +9,16 @@ namespace ITNOteAPI.Controllers;
 [Route("api/[controller]")]
 public class NotesController(IStorage storage) : ControllerBase
 {
-    [HttpGet("{id}")]
+    [Authorize]
+    [HttpGet("protected/{id}")]
     public async Task<IActionResult> GetNoteContent(int id, string name)
     {
         var content = await storage.ReadNote(id, name);
         return Ok(new { Id = id, Name = name, Content = content });
     }
-
-    [HttpPost]
+    
+    [Authorize]
+    [HttpPost("protected")]
     public async Task<IActionResult> CreateNote([FromBody] NoteDto noteDto)
     {
         var note = new Note(noteDto.Name)
@@ -26,15 +29,17 @@ public class NotesController(IStorage storage) : ControllerBase
         await storage.CreateNewSource(note);
         return CreatedAtAction(nameof(GetNoteContent), new { id = note.Id, name = note.Name }, note);
     }
-
-    [HttpPut("{id}")]
+    
+    [Authorize]
+    [HttpPut("protected/{id}")]
     public async Task<IActionResult> UpdateNoteContent(int id, string name, string newContent)
     {
         await storage.WriteInNote(id, name, newContent);
         return NoContent();
     }
-
-    [HttpDelete("{id}")]
+    
+    [Authorize]
+    [HttpDelete("protected/{id}")]
     public async Task<IActionResult> DeleteNoteContent(int id)
     {
         await storage.DeleteNote(id);

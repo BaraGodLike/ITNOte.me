@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ITNOte.me.Model;
@@ -74,13 +75,13 @@ public class LoginModelView : INotifyPropertyChanged
     }
 
 
-    private async Task<bool> LoginWithApi()
+    private async Task<string?> LoginWithApi()
     {
-            return await _apiService.PostAsync("users/login", new UserDto
-            {
-                Name = Nickname!,
-                Password = Password!
-            });
+        return await _apiService.PostAndGetToken("users/login", new UserDto
+        {
+            Name = Nickname!,
+            Password = Password!
+        });
     }
     
 
@@ -103,7 +104,9 @@ public class LoginModelView : INotifyPropertyChanged
                         return;
                     }
 
-                    if (!await LoginWithApi())
+                    var token = await LoginWithApi();
+                    
+                    if (token is null)
                     {
                         IncorrectPassword();
                         return;
@@ -126,7 +129,14 @@ public class LoginModelView : INotifyPropertyChanged
                     };
                     var redactor = new RedactorPage
                     {
-                        DataContext = new RedactorModelView(user, new ApiService(new HttpClient { BaseAddress = new Uri("http://localhost:5019/api/") }))
+                        DataContext = new RedactorModelView(user, new ApiService(new HttpClient
+                        {
+                            BaseAddress = new Uri("http://localhost:5019/api/"), 
+                            DefaultRequestHeaders =
+                            {
+                                Authorization = new AuthenticationHeaderValue("Bearer", token)
+                            }
+                        }))
                     };
                     ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
                         .MainFrame.Navigate(redactor);
