@@ -121,7 +121,7 @@ public class Database : IStorage
         });
     }
 
-    private async Task<ObservableCollection<AbstractSource>> GetAllChildren(int rootId)
+    public async Task<ObservableCollection<AbstractSource>> GetAllChildren(int rootId)
     {
         using var connection = await GetConnection();
         const string query = $"""SELECT * FROM NOTES WHERE PARENT_ID = (@RootId)""";

@@ -1,4 +1,5 @@
-﻿using ITNOte.me.Model.Notes;
+﻿using System.Collections.ObjectModel;
+using ITNOte.me.Model.Notes;
 
 namespace ITNOte.me.Model.Storage;
 
@@ -46,5 +47,10 @@ public class Storage(IStorage repo) : IStorage
     public async Task DeleteNote(int id)
     {
         await repo.DeleteNote(id);
+    }
+
+    public async Task<ObservableCollection<AbstractSource>> GetAllChildren(int id)
+    {
+        return await repo.GetAllChildren(id);
     }
 }

@@ -8,12 +8,11 @@ using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
 
-
 namespace ITNOte.me.ModelView;
 
 public partial class RedactorModelView : INotifyPropertyChanged
 {
-    public IStorage _storage { get; init; } = Storage.RepoStorage; 
+    private ApiService _apiService;
     private User User { get; }
     private ObservableCollection<AbstractSource> _folders;
 
@@ -75,8 +74,9 @@ public partial class RedactorModelView : INotifyPropertyChanged
         }
     }
     
-    public RedactorModelView(User user)
+    public RedactorModelView(User user, ApiService apiService)
     {
+        _apiService = apiService;
         User = user;
         _folders = user.GeneralFolder.Children!;
         ContentNote = string.Empty;
@@ -88,7 +88,8 @@ public partial class RedactorModelView : INotifyPropertyChanged
         if (selectedFile is Note note)
         {
             CurNote = note;
-            ContentNote = await _storage.ReadNote(note.Id, note.Name);
+            var s = (await _apiService.GetAsync<NoteDto>($"notes/{note.Id}?name={note.Name}"));
+            ContentNote = s?.Content;
             
             IsNoteSelected = false;
         }
@@ -101,7 +102,7 @@ public partial class RedactorModelView : INotifyPropertyChanged
     private async Task NewNoteContent(Note note)
     {
         CurNote = note;
-        ContentNote = note.Content;
+        ContentNote = "";
         IsNoteSelected = false;
     }
     
@@ -149,7 +150,6 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 }
 
                 var folder = new Folder(NameOfNewSource, User.GeneralFolder);
-                await _storage.SaveUser(User);
                 await Log.LogInformation(User, $"created new Folder with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
             });
@@ -189,8 +189,8 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 }
                 
                 var note = new Note(NameOfNewSource, User.GeneralFolder);
+                await Storage.RepoStorage.CreateNewSource(note);
                 await NewNoteContent(note);
-                await _storage.SaveUser(User);
                 await Log.LogInformation(User, $"created new Note with name {NameOfNewSource}");
                 NameOfNewSource = string.Empty;
             });
@@ -208,35 +208,35 @@ public partial class RedactorModelView : INotifyPropertyChanged
                 if (CurNote != null)
                 {
                     CurNote.Content = ContentNote!;
-                    await _storage.WriteInNote(CurNote.Id, CurNote.Name, CurNote.Content!);
+                    await _apiService.PutAsync($"Notes/{CurNote.Id}?name={CurNote.Name}&newContent={CurNote.Content}");
                     await Log.LogInformation(User, $"saved file {CurNote.Name}");
                 }
             });
         }
     }
     
-    
-    private DelayCommand? _deleteNoteCommand;
-    public DelayCommand DeleteNoteCommand
-    {
-        get
-        {
-            return _deleteNoteCommand ??= new DelayCommand(async obj =>
-            {
-                Console.WriteLine($"DeleteNoteCommand called with parameter: {obj}");
-                if (obj is Note note)
-                {
-                    User.GeneralFolder.Children!.Remove(note);
-                    await _storage.DeleteNote(note.Id);
-                    await Log.LogInformation(User, $"Deleted note {note.Name}");
-                }
-                else
-                {
-                    Console.WriteLine("DeleteNoteCommand received an invalid parameter.");
-                }
-            });
-        }
-    }
+    //
+    // private DelayCommand? _deleteNoteCommand;
+    // public DelayCommand DeleteNoteCommand
+    // {
+    //     get
+    //     {
+    //         return _deleteNoteCommand ??= new DelayCommand(async obj =>
+    //         {
+    //             Console.WriteLine($"DeleteNoteCommand called with parameter: {obj}");
+    //             if (obj is Note note)
+    //             {
+    //                 User.GeneralFolder.Children!.Remove(note);
+    //                 await _storage.DeleteNote(note.Id);
+    //                 await Log.LogInformation(User, $"Deleted note {note.Name}");
+    //             }
+    //             else
+    //             {
+    //                 Console.WriteLine("DeleteNoteCommand received an invalid parameter.");
+    //             }
+    //         });
+    //     }
+    // }
 
     public bool IsFolder(object obj) => obj is Folder;
     

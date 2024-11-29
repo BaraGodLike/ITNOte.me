@@ -13,7 +13,6 @@ public partial class RegisterPage : Page
     public RegisterPage()
     {
         InitializeComponent();
-        DataContext = new RegisterModelView();
     }
     
 }

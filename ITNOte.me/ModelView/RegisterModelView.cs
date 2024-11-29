@@ -3,15 +3,17 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using ITNOte.me.Model;
+using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
 using ITNOte.me.View;
 
 namespace ITNOte.me.ModelView;
 
-public partial class RegisterModelView() : INotifyPropertyChanged
+public partial class RegisterModelView : INotifyPropertyChanged
 {
-    public IStorage _storage { get; init; } = Storage.RepoStorage;
+    // public IStorage _storage { get; init; } = Storage.RepoStorage;
+    private ApiService _apiService;
     private string _nickname = "";
     private string _password = "";
     private string _passwordRepeat = "";
@@ -49,7 +51,7 @@ public partial class RegisterModelView() : INotifyPropertyChanged
     {
         if (Nickname == null || Nickname.Length < 2 || 
             !NicknameRegex().IsMatch(Nickname) || BannedNames.bannedNames.Contains(Nickname)) return false;
-        return !await _storage.HasNicknameInStorage(Nickname);
+        return await _apiService.GetAsync<UserDto>(Nickname) is null;
     }
 
     public bool IsCorrectPassword()
@@ -82,16 +84,10 @@ public partial class RegisterModelView() : INotifyPropertyChanged
 
                     if (PasswordRepeat.Equals(Password))
                     {
-                        var user = new User(Nickname, Storage.Hasher.HashPassword(Password));
-                        var redactor = new RedactorPage
-                        {
-                            DataContext = new RedactorModelView(user)
-                        };
-
-                        ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
-                            .MainFrame.Navigate(redactor);
-                        await _storage.SaveUser(user);
-                        await Log.LogInformation(user, "register");
+                        await _apiService.PostAsync($"users/register?name={Nickname}&password={Password}", new User());
+                        ((MainWindow) Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!).
+                            MainFrame.Navigate(new Uri("View/LoginPage.xaml", UriKind.Relative));
+                        await Log.LogInformation(new User(Nickname, null), "register");
                         return;
                     }
 
@@ -105,6 +101,12 @@ public partial class RegisterModelView() : INotifyPropertyChanged
     
     
     private DelayCommand? _toLogin;
+
+    public RegisterModelView(ApiService apiService)
+    {
+        _apiService = apiService;
+    }
+
     public DelayCommand BackToLogin
     {
         get

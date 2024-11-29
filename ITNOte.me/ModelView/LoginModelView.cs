@@ -1,7 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ITNOte.me.Model;
+using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 using ITNOte.me.Model.User;
 using ITNOte.me.View;
@@ -10,7 +14,7 @@ namespace ITNOte.me.ModelView;
 
 public class LoginModelView : INotifyPropertyChanged
 {
-    public IStorage _storage { get; init; } = Model.Storage.Storage.RepoStorage;
+    private ApiService _apiService;
     private string? _nickname = "";
     private string? _password = "";
 
@@ -36,14 +40,7 @@ public class LoginModelView : INotifyPropertyChanged
 
     private async Task<bool> IsValidNickname()
     {
-        return Nickname != null && await _storage.HasNicknameInStorage(Nickname);
-    }
-
-    private async Task<bool> IsValidPassword()
-    {
-        return Password != null &&
-               Storage.Hasher.VerifyHashedPassword(Password,
-                   (await _storage.GetUserFromStorage<User>(Nickname!))!.Password);
+        return Nickname != null && await _apiService.GetAsync<UserDto>(Nickname) is not null;
     }
 
     private void IncorrectNickname()
@@ -51,7 +48,7 @@ public class LoginModelView : INotifyPropertyChanged
         MessageBox.Show("Incorrect Nickname");
         Nickname = "";
     }
-
+    
     private void IncorrectPassword()
     {
         MessageBox.Show("Incorrect Password");
@@ -65,37 +62,72 @@ public class LoginModelView : INotifyPropertyChanged
         {
             return _goReg ??= new DelayCommand(async obj =>
                 {
+                    var register = new RegisterPage
+                    {
+                        DataContext = new RegisterModelView(_apiService)
+                    };
                     ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
-                        .MainFrame.Navigate(new Uri("View/RegisterPage.xaml", UriKind.Relative));
+                        .MainFrame.Navigate(register);
                 }
             );
         }
     }
 
+
+    private async Task<bool> LoginWithApi()
+    {
+            return await _apiService.PostAsync("users/login", new UserDto
+            {
+                Name = Nickname!,
+                Password = Password!
+            });
+    }
+    
+
     private DelayCommand? _login;
+
+    public LoginModelView(ApiService apiService)
+    {
+        _apiService = apiService;
+    }
+
     public DelayCommand LoginUser
     {
         get
         {
             return _login ??= new DelayCommand(async obj =>
                 {
-                    if (! await IsValidNickname())
+                    if (await IsValidNickname())
                     {
                         IncorrectNickname();
                         return;
                     }
-                    if (!await IsValidPassword())
+
+                    if (!await LoginWithApi())
                     {
                         IncorrectPassword();
                         return;
+                    } 
+                    var userDto = await _apiService.GetAsync<UserDto>($"users/{Nickname}");
+                    if (userDto is null)
+                    {
+                        MessageBox.Show("Oops, you're null");
+                        return;
                     }
-
-                    var user = await _storage.GetUserFromStorage<User>(Nickname!);
+                    
+                    var user = new User
+                    {
+                        Name = userDto.Name,
+                        General_Folder_Id = userDto.General_Folder_Id,
+                        GeneralFolder = new Folder(Nickname) {
+                            Id = userDto.General_Folder_Id,
+                            Children = await Storage.RepoStorage.GetAllChildren(userDto.General_Folder_Id)
+                            }
+                    };
                     var redactor = new RedactorPage
                     {
-                        DataContext = new RedactorModelView(user!)
+                        DataContext = new RedactorModelView(user, new ApiService(new HttpClient { BaseAddress = new Uri("http://localhost:5019/api/") }))
                     };
-
                     ((MainWindow)Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)!)
                         .MainFrame.Navigate(redactor);
                     await Log.LogInformation(user, "login");

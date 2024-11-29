@@ -1,7 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 namespace ITNOte.me.Model.Notes
 {
+    [JsonDerivedType(typeof(Folder), "Folder")]
+    [JsonDerivedType(typeof(Note), "Note")]
     [Serializable]
     public abstract class AbstractSource : IComparable<AbstractSource>
     {

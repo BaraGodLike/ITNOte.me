@@ -1,4 +1,5 @@
-﻿using ITNOte.me.Model.Notes;
+﻿using System.Text.Json.Serialization;
+using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
 
 namespace ITNOte.me.Model.User
@@ -7,6 +8,7 @@ namespace ITNOte.me.Model.User
     {
         public string Name { get; init; }
         public byte[]? Password { get; set; }
+        [JsonIgnore]
         public Folder GeneralFolder { get; set; }
         public int General_Folder_Id { get; set; }
 

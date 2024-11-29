@@ -1,6 +1,5 @@
 ﻿using ITNOte.me.Model.Notes;
 using ITNOte.me.Model.Storage;
-using ITNOteAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITNOteAPI.Controllers;
