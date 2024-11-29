@@ -13,7 +13,8 @@ public class ApiService(HttpClient httpClient)
         var json = JsonSerializer.Serialize(data);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var response = await httpClient.PostAsync(url, content);
-        return JsonSerializer.Deserialize<TokenResponse>(await response.Content.ReadAsStringAsync())?.token;
+        return !response.IsSuccessStatusCode ? default : 
+            JsonSerializer.Deserialize<TokenResponse>(await response.Content.ReadAsStringAsync())?.token;
     }
     
     public async Task<T?> GetAsync<T>(string url)
