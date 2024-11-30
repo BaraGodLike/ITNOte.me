@@ -51,7 +51,8 @@ public partial class RegisterModelView : INotifyPropertyChanged
     {
         if (Nickname == null || Nickname.Length < 2 || 
             !NicknameRegex().IsMatch(Nickname) || BannedNames.bannedNames.Contains(Nickname)) return false;
-        return await _apiService.GetAsync<UserDto>(Nickname) is null;
+        var user = await _apiService.GetAsync<UserDto?>($"users/{Nickname}");
+        return user is null;
     }
 
     public bool IsCorrectPassword()

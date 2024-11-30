@@ -41,7 +41,7 @@ public class LoginModelView : INotifyPropertyChanged
 
     private async Task<bool> IsValidNickname()
     {
-        return Nickname != null && await _apiService.GetAsync<UserDto>(Nickname) is not null;
+        return Nickname != null && await _apiService.GetAsync<UserDto?>($"users/{Nickname}") is not null;
     }
 
     private void IncorrectNickname()
@@ -98,7 +98,7 @@ public class LoginModelView : INotifyPropertyChanged
         {
             return _login ??= new DelayCommand(async obj =>
                 {
-                    if (await IsValidNickname())
+                    if (!await IsValidNickname())
                     {
                         IncorrectNickname();
                         return;

@@ -18,15 +18,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "BaraGodLike", // Замените на ваш издатель
-            ValidAudience = "ItnoteMeUser", // Замените на вашу аудиторию
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("PfxtvRhbxfnmRjulfYbrnjYtCksibnJXtvVsUjdjhbvVytRf;tnczXnjVsLfdyjYt:bdsPf;ukbcmBGj-nb[jymreLjujhbv")) // Секретный ключ
+            ValidIssuer = "BaraGodLike", 
+            ValidAudience = "ItnoteMeUser", 
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("PfxtvRhbxfnmRjulfYbrnjYtCksibnJXtvVsUjdjhbvVytRf;tnczXnjVsLfdyjYt:bdsPf;ukbcmBGj-nb[jymreLjujhbv"))
         };
     });
 
-// Добавляем авторизацию
 builder.Services.AddAuthorization();
-
 builder.Services.AddControllers();
 
 var app = builder.Build();

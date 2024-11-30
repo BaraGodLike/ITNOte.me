@@ -35,6 +35,7 @@ public class UsersController(IStorage storage) : ControllerBase
     [HttpGet("{name}")]
     public async Task<IActionResult> GetUser(string name)
     {
+        if (!await storage.HasNicknameInStorage(name)) return Unauthorized();
         var user = await storage.GetUserFromStorage<User>(name);
         return Ok(user);
     }

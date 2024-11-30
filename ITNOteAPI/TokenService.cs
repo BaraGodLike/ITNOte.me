@@ -7,7 +7,7 @@ using System.Text;
 
 public class TokenService
 {
-    private const string SecretKey = "PfxtvRhbxfnmRjulfYbrnjYtCksibnJXtvVsUjdjhbvVytRf;tnczXnjVsLfdyjYt:bdsPf;ukbcmBGj-nb[jymreLjujhbv"; // Секретный ключ
+    private const string SecretKey = "PfxtvRhbxfnmRjulfYbrnjYtCksibnJXtvVsUjdjhbvVytRf;tnczXnjVsLfdyjYt:bdsPf;ukbcmBGj-nb[jymreLjujhbv";
     private const string Issuer = "BaraGodLike";
     private const string Audience = "ItnoteMeUser";
 
