@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ITNOte.me\ITNOte.me.csproj" />
+      <ProjectReference Include="..\ITNOteAPI\ITNOteAPI.csproj" />
     </ItemGroup>
 
 </Project>
