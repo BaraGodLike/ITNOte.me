@@ -12,7 +12,7 @@ namespace ITNOte.me.ModelView;
 
 public partial class RedactorModelView : INotifyPropertyChanged
 {
-    private ApiService _apiService;
+    private readonly ApiService _apiService;
     private User User { get; }
     private ObservableCollection<AbstractSource> _folders;
 
@@ -215,29 +215,6 @@ public partial class RedactorModelView : INotifyPropertyChanged
         }
     }
     
-    //
-    // private DelayCommand? _deleteNoteCommand;
-    // public DelayCommand DeleteNoteCommand
-    // {
-    //     get
-    //     {
-    //         return _deleteNoteCommand ??= new DelayCommand(async obj =>
-    //         {
-    //             Console.WriteLine($"DeleteNoteCommand called with parameter: {obj}");
-    //             if (obj is Note note)
-    //             {
-    //                 User.GeneralFolder.Children!.Remove(note);
-    //                 await _storage.DeleteNote(note.Id);
-    //                 await Log.LogInformation(User, $"Deleted note {note.Name}");
-    //             }
-    //             else
-    //             {
-    //                 Console.WriteLine("DeleteNoteCommand received an invalid parameter.");
-    //             }
-    //         });
-    //     }
-    // }
-
     public bool IsFolder(object obj) => obj is Folder;
     
     

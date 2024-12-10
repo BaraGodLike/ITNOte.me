@@ -12,8 +12,7 @@ namespace ITNOte.me.ModelView;
 
 public partial class RegisterModelView : INotifyPropertyChanged
 {
-    // public IStorage _storage { get; init; } = Storage.RepoStorage;
-    private ApiService _apiService;
+    private readonly ApiService _apiService;
     private string _nickname = "";
     private string _password = "";
     private string _passwordRepeat = "";

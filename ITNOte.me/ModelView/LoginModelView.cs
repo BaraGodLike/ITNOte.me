@@ -15,7 +15,7 @@ namespace ITNOte.me.ModelView;
 
 public class LoginModelView : INotifyPropertyChanged
 {
-    private ApiService _apiService;
+    private readonly ApiService _apiService;
     private string? _nickname = "";
     private string? _password = "";
 
